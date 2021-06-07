@@ -1,6 +1,10 @@
+import styles from './styles.module.scss';
+import NavBar from '../../components/NavBar/NavBar.jsx';
+
+
 const Dashboard = () => {
   return (
-    <p>Dashboard</p>
+    <NavBar />
   )
 }
 
