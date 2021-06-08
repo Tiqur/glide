@@ -7,9 +7,8 @@ const Dashboard = () => {
   return (
     <>
       <NavBar />
-      <div className={styles.contentContainer}>
+      <div className={styles.graphContainer}>
         <Chart symbol='DOGE'/>
-        <div className={styles.settingsContainer}/>
       </div>
     </>
   )
