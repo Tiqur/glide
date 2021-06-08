@@ -9,9 +9,9 @@ const NavBar = () => {
       <PigeonLogo className={styles.logo}/>
       <div className={styles.content}>
         <input className={styles.searchBar}/>
-        <Text padding='1em 1.5em' underline>Dashboard</Text>
-        <Text padding='1em 1.5em' underline>Charts</Text>
-        <Text padding='1em 1.5em' underline>Logs</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Dashboard</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Charts</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Logs</Text>
         <BellSvg className={styles.bell}/>
       </div>
     </div>
