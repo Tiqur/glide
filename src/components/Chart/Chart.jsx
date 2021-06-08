@@ -27,10 +27,10 @@ const Chart = (props) => {
       hotlist={false}
       calendar={false}
       withdateranges={false}
-      height={610}
-      width={980}
       timezone='Etc/UTC'
       style={BarStyles.CANDLES}
+      width={props.width || 600}
+      height={props.height || 400}
 
       studies={[
           {
