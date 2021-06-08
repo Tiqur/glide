@@ -1,4 +1,5 @@
 import TradingViewWidget, {Themes} from 'react-tradingview-widget';
+import styles from './styles.module.scss';
 
 export const BarStyles = {
   BARS: '0',
@@ -25,6 +26,7 @@ const Chart = (props) => {
       hide_side_toolbar={true}
       hide_top_toolbar={true}
       hotlist={false}
+      autosize={!(props.width && props.height)}
       calendar={false}
       withdateranges={false}
       timezone='Etc/UTC'

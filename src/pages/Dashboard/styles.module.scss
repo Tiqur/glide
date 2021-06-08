@@ -1,14 +1,19 @@
-.contentContainer {
-  margin-top: 4em;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
+.mainContainer {
+  margin-top: 6em;
+  display: grid;
+  grid-gap: 1.5em;
+  grid-template-columns: 1fr 20vw;
+  grid-template-rows: 50vh calc(50vh - 9em);
+  grid-template-areas: "a b"
+                       "c c"
 }
 
 .settingsContainer {
-  width: 20%;
   background: #242A39;
-  height: calc(100% - 4em);
+  grid-area: b;
+}
+
+.chartCarousel {
+  background: #242A39;
+  grid-area: c;
 }
