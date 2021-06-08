@@ -12,6 +12,16 @@
   }
 }
 
+.searchBar {
+  width: 60em;
+  height: 2.5em;
+  color: #CDCDCD;
+  padding: 0 1em;
+  background: #242A39;
+  outline: none;
+  border: none;
+}
+
 .content {
   display: flex;
   justify-content: flex-end;
