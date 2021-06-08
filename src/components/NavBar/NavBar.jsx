@@ -1,6 +1,7 @@
 import styles from './styles.module.scss';
 import Text from '../../components/Text/Text.jsx';
 import { ReactComponent as PigeonLogo } from '../../assets/pigeon.svg';
+import { ReactComponent as BellSvg } from '../../assets/notification.svg';
 
 const NavBar = () => {
   return (
@@ -11,6 +12,7 @@ const NavBar = () => {
         <Text padding='1em 1.5em' underline>Dashboard</Text>
         <Text padding='1em 1.5em' underline>Charts</Text>
         <Text padding='1em 1.5em' underline>Logs</Text>
+        <BellSvg className={styles.bell}/>
       </div>
     </div>
   )
