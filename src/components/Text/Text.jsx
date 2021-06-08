@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 const Text = (props) => {
   return (
     <p style={{
-      color: props.color ? props.color : '#CDCDCD',
+      color: props.color ? props.color : '#B2B5BE',
       fontWeight: props.weight ? props.weight : 'initial',
       fontSize: (props.size ? props.size : 'initial') + 'ch',
       fontFamily: props.family ? props.family : 'Roboto',
