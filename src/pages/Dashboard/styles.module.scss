@@ -1,10 +1,10 @@
 .mainContainer {
-  margin-top: 6em;
+  margin-top: 4.5em;
   display: grid;
   grid-gap: 1.5em;
-  grid-template-columns: 1fr 20vw;
-  grid-template-rows: 50vh calc(50vh - 9em);
-  grid-template-areas: "a b"
+  grid-template-columns: 20vw 1fr;
+  grid-template-rows: 60vh calc(40vh - 7.5em);
+  grid-template-areas: "b a"
                        "c c"
 }
 
