@@ -10,9 +10,19 @@ const GlobalProvider = (props) => {
 
   ws.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
-    console.log(data);
-  }
 
+    // Update prices 
+    if (data['type'] === 'price') {
+      const tempPrices = prices;
+      tempPrices[data['token']] = data['price'];
+      setPrices(tempPrices);
+
+    // Update alerts
+    } else if (data['type'] === 'alert') {
+      setAlerts([...alerts, {token: data['token'], interval: data['interval'], ema4: data['4ma']}])
+    }
+  }
+ 
   return (
     <GlobalContext.Provider value={{prices: [prices, setPrices], alerts: [alerts, setAlerts]}}>
       {props.children}
