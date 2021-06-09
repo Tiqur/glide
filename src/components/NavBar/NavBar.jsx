@@ -11,9 +11,13 @@ const NavBar = () => {
 
   return (
     <div className={styles.container}>
-      <PigeonLogo className={styles.logo}/>
+      <div className={styles.logoContainer}>
+        <div className={styles.centerText}>
+          <PigeonLogo className={styles.logo}/>
+          <Text size={3}>Glide</Text>
+        </div>
+      </div>
       <div className={styles.content}>
-        <input className={styles.searchBar}/>
         <NavLink text='Dashboard'/>
         <NavLink text='Charts'/>
         <NavLink text='Trade'/>
