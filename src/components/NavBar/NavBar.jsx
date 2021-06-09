@@ -15,9 +15,9 @@ const NavBar = () => {
       <PigeonLogo className={styles.logo}/>
       <div className={styles.content}>
         <input className={styles.searchBar}/>
-        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Dashboard</Text>
-        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Charts</Text>
-        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Logs</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>Dashboard</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>Charts</Text>
+        <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>Logs</Text>
         <NotificationBell state={alerts.length}/>
       </div>
     </div>

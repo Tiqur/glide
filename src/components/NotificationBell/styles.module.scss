@@ -1,6 +1,10 @@
 .notificationContainer {
   display: flex;
   justify-content: flex-end;
+
+  & :hover {
+    fill: #92959B;
+  }
 }
 
 .bell {
