@@ -9,7 +9,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Layout>
-            <Route exact path='/' component={Dashboard}/>
+            <Route exact path='/trade' component={Dashboard}/>
           </Layout>
         </Switch>
       </BrowserRouter>
