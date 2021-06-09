@@ -13,20 +13,27 @@ const NotificationBell = (props) => {
   const [prices, setPrices] = priceState;
   const [alerts, setAlerts] = alertState;
 
+  const removeElement = () => {
+    setAlerts(alerts.filter((o) => {
+      return o.time !== props.time;
+    }))
+  }
+
   const Notification = (props) => {
     return (
       <div className={styles.notificationMessageContainer}>
         <Link to={{pathname: '/trade', search: '?token='+props.token}}>
-          <div onClick={() => {console.log("s")}} className={styles.notificationMessageContent}>
+      <div onClick={() => {
+        removeElement()
+        setAlertPopout(false)
+      }} className={styles.notificationMessageContent}>
             <Text>Token: {props.token}</Text>
             <Text>Interval: {props.interval}</Text>
             <Text>4ema: {props.ema4}</Text>
           </div>
         </Link>
       <div onClick={() => {
-        setAlerts(alerts.filter((o) => {
-          return o.time !== props.time;
-        }))
+        removeElement()
       }} className={styles.notificationCloseButton}/>
       </div>
     )

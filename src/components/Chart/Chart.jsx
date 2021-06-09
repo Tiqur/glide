@@ -16,7 +16,6 @@ export const BarStyles = {
 
 const Chart = (props) => {
   return (
-    <div style={{zIndex: -1}}>
       <TradingViewWidget 
         
         // Explicity set these because they will be implemented as states later on
@@ -74,7 +73,6 @@ const Chart = (props) => {
             }
        ]}
         symbol={props.symbol + "USDT"}/>
-    </div>
   )
 }
 export default Chart;
