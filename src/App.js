@@ -1,5 +1,5 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Dashboard from './pages/Dashboard/Dashboard.jsx';
+import Trade from './pages/Trade/Trade.jsx';
 import Layout from './components/Layout/Layout.jsx';
 import { GlobalProvider } from './components/GlobalContext.jsx';
 
@@ -9,7 +9,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Layout>
-            <Route exact path='/trade' component={Dashboard}/>
+            <Route exact path='/trade' component={Trade}/>
           </Layout>
         </Switch>
       </BrowserRouter>
