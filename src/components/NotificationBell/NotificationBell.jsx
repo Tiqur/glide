@@ -6,7 +6,7 @@ const NotificationBell = (props) => {
   return (
     <div className={styles.notificationContainer}>
       <BellSvg className={styles.bell}/>
-      { props.state &&
+      { props.state > 0 &&
         <div className={styles.badge}>
           <Text size={1.4}>{props.state}</Text>
         </div>
