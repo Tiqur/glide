@@ -1,7 +1,7 @@
 import styles from './styles.module.scss';
 import Text from '../../components/Text/Text.jsx';
+import NotificationBell from '../../components/NotificationBell/NotificationBell.jsx';
 import { ReactComponent as PigeonLogo } from '../../assets/pigeon.svg';
-import { ReactComponent as BellSvg } from '../../assets/notification.svg';
 
 const NavBar = () => {
   return (
@@ -12,7 +12,7 @@ const NavBar = () => {
         <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Dashboard</Text>
         <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Charts</Text>
         <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0'underline>Logs</Text>
-        <BellSvg className={styles.bell}/>
+        <NotificationBell state={10}/>
       </div>
     </div>
   )

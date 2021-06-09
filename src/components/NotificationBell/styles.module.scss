@@ -1,0 +1,20 @@
+.notificationContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bell {
+  height: 2.3em;
+  width: 2.3em;
+  margin-left: 1em;
+  fill: #B2B5BE;
+}
+
+.badge {
+  text-align: center;
+  position: absolute;
+  height: 1.2em;
+  width: 1.2em;
+  background: red;
+  border-radius: 50%;
+}
