@@ -6,7 +6,7 @@ import { useState, useContext } from 'react';
 
 const NotificationBell = (props) => {
   const { priceState, alertState } = useContext(GlobalContext);
-  const [alertPopout, setAlertPopout] = useState(true);
+  const [alertPopout, setAlertPopout] = useState(false);
   const [prices, setPrices] = priceState;
   const [alerts, setAlerts] = alertState;
 
@@ -17,6 +17,12 @@ const NotificationBell = (props) => {
 
   return (
     <>
+      { alertPopout && 
+        <>
+          <div onClick={() => {setAlertPopout(false)}}className={styles.notificationPopoutOverlay}/>
+          <div className={styles.notificationPopout}/>
+        </>
+      }
       <div onClick={handleClick} className={styles.notificationContainer}>
         <BellSvg className={styles.bell}/>
         { alerts.length > 0 &&

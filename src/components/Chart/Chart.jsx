@@ -16,62 +16,65 @@ export const BarStyles = {
 
 const Chart = (props) => {
   return (
-    <TradingViewWidget 
-      
-      // Explicity set these because they will be implemented as states later on
-      details={false}
-      interval='5'
-      show_popup_button={true}
-      theme={Themes.DARK}
-      hide_side_toolbar={true}
-      hide_top_toolbar={true}
-      hotlist={false}
-      autosize={!(props.width && props.height)}
-      calendar={false}
-      withdateranges={false}
-      timezone='Etc/UTC'
-      style={BarStyles.CANDLES}
-      width={props.width || 600}
-      height={props.height || 400}
+    <div style={{zIndex: -1}}>
+      <TradingViewWidget 
+        
+        // Explicity set these because they will be implemented as states later on
+        details={false}
+        interval='5'
+        show_popup_button={true}
+        theme={Themes.DARK}
+        hide_side_toolbar={false}
+        hide_top_toolbar={false}
+        hotlist={false}
+        autosize={!(props.width && props.height)}
+        calendar={false}
+        withdateranges={false}
+        timezone='Etc/UTC'
+        style={BarStyles.CANDLES}
+        width={props.width || 600}
+        height={props.height || 400}
+        allow_symbol_change={false}
 
-      studies={[
-          {
-            "id": "MAExp@tv-basicstudies",
-            "inputs":
+        studies={[
             {
-              "length": 9,
-            }
-          },
-          {
-            "id": "MAExp@tv-basicstudies",
-            "inputs":
+              "id": "MAExp@tv-basicstudies",
+              "inputs":
+              {
+                "length": 9,
+              }
+            },
             {
-              "length": 13,
-            }
-          },
-          {
-            "id": "MAExp@tv-basicstudies",
-            "inputs":
+              "id": "MAExp@tv-basicstudies",
+              "inputs":
+              {
+                "length": 13,
+              }
+            },
             {
-              "length": 21,
-            }
-          },
-          {
-            "id": "MAExp@tv-basicstudies",
-            "inputs":
+              "id": "MAExp@tv-basicstudies",
+              "inputs":
+              {
+                "length": 21,
+              }
+            },
             {
-              "length": 55,
-            }
-          },
-          {
-            "id": "BB@tv-basicstudies",
-            "inputs":
+              "id": "MAExp@tv-basicstudies",
+              "inputs":
+              {
+                "length": 55,
+              }
+            },
             {
-              "length": 20
+              "id": "BB@tv-basicstudies",
+              "inputs":
+              {
+                "length": 20
+              }
             }
-          }
-     ]}
-      symbol={props.symbol + "USDT"}/>
+       ]}
+        symbol={props.symbol + "USDT"}/>
+    </div>
   )
 }
 export default Chart;

@@ -14,6 +14,24 @@
   fill: #777A82;
 }
 
+.notificationPopoutOverlay {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.notificationPopout {
+  position: absolute;
+  width: 30em;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  background: #161A25;
+}
+
 .badge {
   text-align: center;
   position: absolute;
