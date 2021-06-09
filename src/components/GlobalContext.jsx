@@ -5,7 +5,7 @@ const GlobalContext = createContext();
 
 const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState([{token: 'doge', interval: '5m', ema4: 'yes'}]);
   const [logs, setLogs] = useState([]);
 
   ws.onmessage = (msg) => {
@@ -19,7 +19,7 @@ const GlobalProvider = (props) => {
 
     // Update alerts
     } else if (data['type'] === 'alert') {
-      setAlerts([...alerts, {token: data['token'], interval: data['interval'], ema4: data['4ma']}])
+      setAlerts([...alerts, {token: data['token'], interval: data['interval'], time: data['time'], ema4: data['4ma']}])
     }
   }
  

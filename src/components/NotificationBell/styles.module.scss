@@ -38,11 +38,15 @@
 .notificationMessageContainer {
   display: flex;
   justify-content: space-between;
-  border-radius: 16px;
+  border-radius: 8px;
   width: calc(100% - 2em);
   height: 5em;
   background: #242A39;
   margin-top: 1em;
+
+  & :hover {
+    cursor: pointer;
+  }
 }
 
 .notificationMessageContent {
@@ -56,17 +60,8 @@
 .notificationCloseButton {
   height: 5em;
   width: 3em;
-  border-radius: 0 16px 16px 0;
-  background: #1E222C;
-}
-
-.notification {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 1em);
-  background: #242A39;
-  border-radius: 16px;
-  height: 5em;
+  border-radius: 0 8px 8px 0;
+  background: #AB3323;
 }
 
 .badge {

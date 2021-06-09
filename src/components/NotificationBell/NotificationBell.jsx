@@ -5,16 +5,6 @@ import { GlobalContext } from '../GlobalContext.jsx';
 import { useState, useContext } from 'react';
 import { Portal } from 'react-portal';
 
-const Notification = (props) => {
-  return (
-    <div className={styles.notificationMessageContainer}>
-      <div className={styles.notificationMessageContent}>
-        <Text>4EMA: {props.token}</Text>
-      </div>
-      <div className={styles.notificationCloseButton}/>
-    </div>
-  )
-}
 
 const NotificationBell = (props) => {
   const { priceState, alertState } = useContext(GlobalContext);
@@ -22,16 +12,30 @@ const NotificationBell = (props) => {
   const [prices, setPrices] = priceState;
   const [alerts, setAlerts] = alertState;
 
+  const Notification = (props) => {
+    return (
+      <div className={styles.notificationMessageContainer}>
+        <div className={styles.notificationMessageContent}>
+          <Text>Token: {props.token}</Text>
+          <Text>Interval: {props.interval}</Text>
+          <Text>4ema: {props.ema4}</Text>
+        </div>
+      <div onClick={() => {
+        setAlerts(alerts.filter((o) => {
+          return o.time !== props.time;
+        }))
+      }} className={styles.notificationCloseButton}/>
+      </div>
+    )
+  }
+
   return (
     <>
       { alertPopout && 
         <Portal node={document && document.getElementById('root')}>
           <div onClick={() => {setAlertPopout(false)}} className={styles.notificationPopoutOverlay}/>
           <div className={styles.notificationPopout}>
-            <Notification />
-            <Notification />
-            <Notification />
-            <Notification />
+            {alerts.map(e => <Notification time={e.time} token={e.token} interval={e.interval} ema4={e.ema4}/> )}
           </div>
         </Portal>
       }
