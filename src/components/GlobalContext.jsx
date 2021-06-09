@@ -7,6 +7,7 @@ const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [status, setStatus] = useState('idle');
 
   ws.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
@@ -25,7 +26,7 @@ const GlobalProvider = (props) => {
   }
  
   return (
-    <GlobalContext.Provider value={{priceState: [prices, setPrices], alertState: [alerts, setAlerts]}}>
+    <GlobalContext.Provider value={{statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts]}}>
       {props.children}
     </GlobalContext.Provider>
   )
