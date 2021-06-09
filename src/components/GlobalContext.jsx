@@ -7,6 +7,20 @@ const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [config, setConfig] = useState(`{
+    "watchlist": [
+      "DOGE",
+      "MATIC",
+      "ETC"
+    ],
+
+    "precision": 1000,
+
+    "ema_intervals": [9, 13, 21, 55],
+
+    "time_intervals": [1, 5, 15]
+  }`
+);
   const [status, setStatus] = useState('idle');
 
   ws.onmessage = (msg) => {
@@ -26,7 +40,7 @@ const GlobalProvider = (props) => {
   }
  
   return (
-    <GlobalContext.Provider value={{statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts]}}>
+    <GlobalContext.Provider value={{configState: [config, setConfig], statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts]}}>
       {props.children}
     </GlobalContext.Provider>
   )
