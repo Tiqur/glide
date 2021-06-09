@@ -4,6 +4,7 @@ import { ReactComponent as BellSvg } from '../../assets/notification.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import { useState, useContext } from 'react';
 import { Portal } from 'react-portal';
+import { Link } from 'react-router-dom';
 
 
 const NotificationBell = (props) => {
@@ -15,11 +16,13 @@ const NotificationBell = (props) => {
   const Notification = (props) => {
     return (
       <div className={styles.notificationMessageContainer}>
-        <div className={styles.notificationMessageContent}>
-          <Text>Token: {props.token}</Text>
-          <Text>Interval: {props.interval}</Text>
-          <Text>4ema: {props.ema4}</Text>
-        </div>
+        <Link to={{pathname: '/trade', search: '?token='+props.token}}>
+          <div onClick={() => {console.log("s")}} className={styles.notificationMessageContent}>
+            <Text>Token: {props.token}</Text>
+            <Text>Interval: {props.interval}</Text>
+            <Text>4ema: {props.ema4}</Text>
+          </div>
+        </Link>
       <div onClick={() => {
         setAlerts(alerts.filter((o) => {
           return o.time !== props.time;
