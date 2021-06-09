@@ -3,6 +3,7 @@ import Text from '../Text/Text.jsx';
 import { ReactComponent as BellSvg } from '../../assets/notification.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import { useState, useContext } from 'react';
+import { Portal } from 'react-portal';
 
 const Notification = (props) => {
   return (
@@ -29,7 +30,7 @@ const NotificationBell = (props) => {
   return (
     <>
       { alertPopout && 
-        <>
+        <Portal node={document && document.getElementById('root')}>
           <div onClick={() => {setAlertPopout(false)}}className={styles.notificationPopoutOverlay}/>
           <div className={styles.notificationPopout}>
             <Notification />
@@ -37,7 +38,7 @@ const NotificationBell = (props) => {
             <Notification />
             <Notification />
           </div>
-        </>
+        </Portal>
       }
       <div onClick={handleClick} className={styles.notificationContainer}>
         <BellSvg className={styles.bell}/>
