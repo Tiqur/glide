@@ -7,7 +7,6 @@ const Dashboard = () => {
   const width = Math.round(window.innerWidth * 0.7);
   const height = Math.round(window.innerHeight * 0.5);
 
-  console.log(height, width)
   return (
     <>
       <NavBar />
