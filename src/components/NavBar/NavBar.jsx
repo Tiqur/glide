@@ -6,6 +6,8 @@ import { ReactComponent as PigeonLogo } from '../../assets/pigeon.svg';
 import { ReactComponent as StartSvg } from '../../assets/power-button.svg';
 import { ReactComponent as StopSvg } from '../../assets/stop.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
+import LoadingSpin from 'react-loading-spin';
+
 
 const NavLink = (props) => {
   return(<Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>{props.text}</Text>)
@@ -17,9 +19,15 @@ const NavBar = () => {
 
   const handleStatusClick = () => {
     if (status == 'idle') {
-      setStatus('running');
+      setStatus('loading');
+      setTimeout(() => {
+        setStatus('running')
+      }, 2000)
     } else if (status == 'running') {
-      setStatus('idle')
+      setStatus('loading')
+      setTimeout(() => {
+        setStatus('idle')
+      }, 1000)
     }
   }
 
@@ -29,7 +37,7 @@ const NavBar = () => {
         return <StartSvg fill='#05AC70' onClick={handleStatusClick} className={styles.startStop}/>
         break;
       case "loading":
-        return <StopSvg fill='#B2B5BE' onClick={handleStatusClick} className={styles.startStop}/>
+        return <LoadingSpin primaryColor='#05AC70' secondaryColor='#161A25' size='1.55em'/>
         break;
       case "running":
         return <StopSvg fill='#AB3323' onClick={handleStatusClick} className={styles.startStop}/>
