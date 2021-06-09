@@ -22,16 +22,11 @@ const NotificationBell = (props) => {
   const [prices, setPrices] = priceState;
   const [alerts, setAlerts] = alertState;
 
-  const handleClick = () => {
-    setAlertPopout(!alertPopout);
-    console.log(alertPopout);
-  }
-
   return (
     <>
       { alertPopout && 
         <Portal node={document && document.getElementById('root')}>
-          <div onClick={() => {setAlertPopout(false)}}className={styles.notificationPopoutOverlay}/>
+          <div onClick={() => {setAlertPopout(false)}} className={styles.notificationPopoutOverlay}/>
           <div className={styles.notificationPopout}>
             <Notification />
             <Notification />
@@ -40,7 +35,7 @@ const NotificationBell = (props) => {
           </div>
         </Portal>
       }
-      <div onClick={handleClick} className={styles.notificationContainer}>
+      <div onClick={() => {setAlertPopout(true)}} className={styles.notificationContainer}>
         <BellSvg className={styles.bell}/>
         { alerts.length > 0 &&
           <div className={styles.badge}>
