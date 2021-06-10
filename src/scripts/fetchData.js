@@ -40,17 +40,27 @@ class MovingAverageInterval {
 
   calcEmas() {
     // Extract closing prices from specified interval
-    closing_prices = #Get all close attributes from ohlcv objects
+    const closing_prices = #Get all close attributes from ohlcv objects
   
     // Calculate SMA for first range, then delete from list to avoid using data from future
-    data_range = closing_prices.slice(0, this.ma_interval);
-    this.emas.push(#calcsma(data_range))
+    const data_range = closing_prices.slice(0, this.ma_interval);
+
+    // Calculate sma
+    const new_sma = data_range.reduce((a, b) a + b, 0);
+    this.emas.push(new_sma);
 
     // List without the first (ma) elements
-    new_data_range = closing_prices.slice(this.ma_interval, closing_prices.length);
+    const new_data_range = closing_prices.slice(this.ma_interval, closing_prices.length);
 
     for (i=0; i < new_data_range.length-1; i++) {
-      this.emas.push(#ema(new_data_range[i], this.emas[this.emas.length-1], this.ma_interval));
+      // Calculate ema
+      const current_price = new_data_range[i];
+      const prev_ema = this.emas[this.emas.length-1];
+      const window = this.ma_interval;
+    
+      const k = 2 / (window + 1);
+      this.emas.push(current_price * k + prev_ema * (1 - k));
+      
     }
   }
 }
