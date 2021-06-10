@@ -149,7 +149,7 @@ const DownloadHistoricalData = (props) => {
   const [logs, setLogs] = logState;
 
   useEffect(() => {
-    const tokens = ['DOGEUSDT', 'MATICUSDT'];
+    const tokens = ['DOGEUSDT'];
     const timeIntervals = ['1m', '5m'];
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;

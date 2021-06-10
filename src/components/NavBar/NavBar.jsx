@@ -68,8 +68,8 @@ const NavBar = () => {
       <div className={styles.content}>
         <NavLink to='/trade' text='Trade'/>
         <NavLink to='/dashboard' text='Dashboard'/>
-        <NavLink to='/charts' text='Charts'/>
-        <NavLink to='/logs' text='Logs'/>
+        <NavLink to='/trade' text='Charts'/>
+        <NavLink to='/trade' text='Logs'/>
 
         <StatusButton/>
 

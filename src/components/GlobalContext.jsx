@@ -6,7 +6,7 @@ const GlobalContext = createContext();
 const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
   const [alerts, setAlerts] = useState([]);
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState([{date: new Date, message: 'Welcome to Glide! :)'}]);
   const [status, setStatus] = useState('idle');
   const [config, setConfig] = useState(`{
       "watchlist": [
