@@ -17,17 +17,19 @@ const Dashboard = () => {
     <>
       <NavBar />
       <div className={styles.mainContainer}>
-      <Editor
-        className={styles.editor}
-        value={config}
-        onValueChange={(code) => setConfig(code)}
-        highlight={(code) => highlight(code, languages.js)}
-        padding={10}
-        style={{
-          fontFamily: '"Roboto", "Fira Mono", monospace',
-          fontSize: 20,
-        }}
-      />
+        <Editor
+          className={styles.editor}
+          value={config}
+          onValueChange={(code) => setConfig(code)}
+          highlight={(code) => highlight(code, languages.js)}
+          padding={10}
+          style={{
+            fontFamily: '"Roboto", "Fira Mono", monospace',
+            fontSize: 20,
+          }}
+        />
+        <div className={styles.logsContainer}>
+        </div>
       </div>
     </>
   )

@@ -1,13 +1,24 @@
 .mainContainer {
+  display: grid;
   margin-top: 4.5em;
   width: 100%;
   height: calc(100vh - 7.5em);
-  background: #242A39;
-  border-radius: 8px;
+  grid-gap: 1.5em;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "a b";
 }
 
 .editor {
-  background: #3E4556;
-  width: 50%;
-  height: 100%;
+  background: #242A39;
+  border-radius: 8px;
+  grid-area: a;
 }
+
+.logsContainer {
+  background: #242A39;
+  border-radius: 8px;
+  grid-area: b;
+}
+
+
