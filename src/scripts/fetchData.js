@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -40,13 +40,13 @@ class MovingAverageInterval {
 
   calcEmas() {
     // Extract closing prices from specified interval
-    const closing_prices = #Get all close attributes from ohlcv objects
+    const closing_prices = this.ohlcv.map(e => e.close);
   
     // Calculate SMA for first range, then delete from list to avoid using data from future
     const data_range = closing_prices.slice(0, this.ma_interval);
 
     // Calculate sma
-    const new_sma = data_range.reduce((a, b) a + b, 0);
+    const new_sma = data_range.reduce((a, b) => a + b, 0);
     this.emas.push(new_sma);
 
     // List without the first (ma) elements
@@ -77,30 +77,31 @@ class Token {
     this.time_interval_instances = [];
   }
 
-  downloadHistory() {
+  async download_history() {
     // Download data for each time range and moving average range
-    time_ranges.forEach(time_range) {
+    this.time_ranges.forEach(async (time_range) => {
       // Initialize interval history
-      ih = TimeInterval(time_range);
+      const ih = new TimeInterval(time_range);
       
       // Emas rely on previous emas.  Calculate extra for more precision.
-      download_range = Math.max(this.ema_ranges) + this.precision;
+      const download_range = Math.max.apply(Math, this.ema_ranges) + this.precision;
 
       // Convert binance kline to seconds
-      interval_sec = intervalSecMap[time_range] * download_range;
+      const interval_sec = intervalSecMap[time_range] * download_range;
       
       // Fetch historical data
-      const res = axios.get(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&startTime=${range}`);
-      const historical_data = res.json();
+      const historical_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${interval_sec}`)).data;
+      console.log(historical_data.length)
+      console.log(`Len: ${historical_data.length}\nInterval: ${time_range}`);
 
       // Optimize downloads by only downloading the necessary data per token
       this.ema_ranges.forEach(ma_range => {
 
         // Initialize moving average interval instance
-        mai = MovingAverageInterval(ma_range);
+        const mai = new MovingAverageInterval(ma_range);
 
         // new data range
-        new_range = historical_data.slice(-(ma_range + self.precision));
+        const new_range = historical_data.slice(-(ma_range + this.precision));
 
         // Organize data
         new_range.forEach(data => {
@@ -113,8 +114,18 @@ class Token {
 
       this.time_interval_instances.append(ih);
 
-    }
+    })
   }
 }
 
+const tokens = ['DOGEUSDT'];
+const timeIntervals = ['1m'];
+const emaIntervals = [9, 13, 21, 55];
+const precision = 1000;
+
+tokens.forEach(token => {
+  console.log(token);
+  const newToken = new Token(token, precision, emaIntervals, timeIntervals);
+  newToken.download_history();
+})
 
