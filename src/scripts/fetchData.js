@@ -97,14 +97,25 @@ class Token {
       
       // Emas rely on previous emas.  Calculate extra for more precision.
       const download_range = Math.max.apply(Math, this.ema_ranges) + this.precision;
-
-      // Convert binance kline to seconds
-      const interval_sec = intervalSecMap[time_range] * download_range;
       
       // Fetch historical data
-      const historical_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${interval_sec}`)).data;
+      let historical_data = [];
+
+      // Download data in chunks ( mostly for if precision + max ema range is greater than 1000 )
+      let download_range_index = download_range;
+
+      while (download_range_index > 0) {
+
+        // Calc amount of milliseconds to download for current chunk
+        const interval_ms = intervalSecMap[time_range] * download_range_index * 1000;
+        
+        const partial_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${Date.now() - interval_ms}&limit=1000`)).data;
+        historical_data = [...historical_data, ...partial_data];
+
+        download_range_index -= partial_data.length;
+      }
+
       console.log(historical_data.length)
-      console.log(`Len: ${historical_data.length}\nInterval: ${time_range}`);
 
       // Optimize downloads by only downloading the necessary data per token
       this.ema_ranges.forEach(ma_range => {
