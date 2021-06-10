@@ -7,10 +7,15 @@ import { ReactComponent as StartSvg } from '../../assets/power.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import LoadingSpin from 'react-loading-spin';
 import DownloadHistoricalData from '../DownloadHistoricalData.jsx';
+import { Link } from 'react-router-dom';
 
 
 const NavLink = (props) => {
-  return(<Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>{props.text}</Text>)
+  return (
+    <Link to={props.to}>
+      <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>{props.text}</Text>
+    </Link>
+  )
 }
 
 const NavBar = () => {
@@ -58,10 +63,10 @@ const NavBar = () => {
         </div>
       </div>
       <div className={styles.content}>
-        <NavLink text='Dashboard'/>
-        <NavLink text='Charts'/>
-        <NavLink text='Trade'/>
-        <NavLink text='Logs'/>
+        <NavLink to='/dashboard' text='Dashboard'/>
+        <NavLink to='/charts' text='Charts'/>
+        <NavLink to='/trade' text='Trade'/>
+        <NavLink to='/logs' text='Logs'/>
 
         <StatusButton/>
 
