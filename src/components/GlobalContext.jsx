@@ -40,7 +40,7 @@ const GlobalProvider = (props) => {
   }
  
   return (
-    <GlobalContext.Provider value={{configState: [config, setConfig], statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts]}}>
+    <GlobalContext.Provider value={{configState: [config, setConfig], statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts], logState: [logs, setLogs]}}>
       {props.children}
     </GlobalContext.Provider>
   )

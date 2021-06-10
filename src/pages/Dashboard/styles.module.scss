@@ -5,7 +5,7 @@
   height: calc(100vh - 7.5em);
   grid-gap: 1.5em;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: calc(50vh - 3.75em) 1fr;
   grid-template-areas: "a b"
                        "a c"
 }
@@ -19,13 +19,16 @@
 .statisticsContainer {
   background: #242A39;
   border-radius: 8px;
-  grid-area: b;
+  grid-area: c;
 }
 
 .logsContainer {
   background: #242A39;
   border-radius: 8px;
-  grid-area: c;
+  grid-area: b;
+  overflow-y: scroll;
+  padding-left: 1em;
+  padding-top: 1em;
 }
 
 

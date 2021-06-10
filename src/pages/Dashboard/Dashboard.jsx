@@ -7,11 +7,14 @@ import { GlobalContext } from '../../components/GlobalContext.jsx';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css';
+import Text from '../../components/Text/Text.jsx';
 
 
 const Dashboard = () => {
-  const { configState } = useContext(GlobalContext);
+  const { configState, logState } = useContext(GlobalContext);
   const [config, setConfig] = configState;
+  const [logs, setLogs] = logState;
+
 
   return (
     <>
@@ -29,6 +32,9 @@ const Dashboard = () => {
           }}
         />
         <div className={styles.logsContainer}>
+          {logs.map(e => {
+            <Text>{e}</Text>
+          })}
         </div>
         <div className={styles.statisticsContainer}>
         </div>
