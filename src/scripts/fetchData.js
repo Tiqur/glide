@@ -22,6 +22,18 @@ const intervalSecMap  = {
         '1M'  : DAY * 30
     }
 
+class Ohlvc {
+  constructor(data) {
+    this.start_time = oarseFloat(data[0]);
+    this.open = oarseFloat(data[1]);
+    this.high = oarseFloat(data[2]);
+    this.low = oarseFloat(data[3]);
+    this.close = oarseFloat(data[4]);
+    this.volume = oarseFloat(data[5]);
+    this.end_time = oarseFloat(data[6]);
+  }
+}
+
 class TimeInterval {
   constructor(interval) {
     this.candle_time_interval = interval;
