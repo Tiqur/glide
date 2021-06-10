@@ -94,8 +94,9 @@ class Token {
 
   async download_history() {
     return new Promise(resolve => {
+
       // Download data for each time range and moving average range
-      this.time_ranges.forEach(async (time_range) => {
+      this.time_ranges.forEach(time_range => {
         // Initialize interval history
         const ih = new TimeInterval(time_range);
         
@@ -108,16 +109,22 @@ class Token {
         // Download data in chunks ( mostly for if precision + max ema range is greater than 1000 )
         let download_range_index = download_range;
 
-        while (download_range_index > 0) {
+
+        const r_download_klines = async () => {
 
           // Calc amount of milliseconds to download for current chunk
           const interval_ms = intervalSecMap[time_range] * download_range_index * 1000;
           
-          const partial_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${Date.now() - interval_ms}&limit=1000`)).data;
-          historical_data = [...historical_data, ...partial_data];
-
-          download_range_index -= partial_data.length;
+          // Download
+          axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${Date.now() - interval_ms}&limit=1000`).then(data => {
+            const partial_data = data.data;
+            historical_data = [...historical_data, ...partial_data];
+            download_range_index -= partial_data.length;
+            if (download_range_index > 0) setTimeout(r_download_klines, 1500);
+          })
         }
+        r_download_klines();
+
 
         //console.log(historical_data.length)
 
