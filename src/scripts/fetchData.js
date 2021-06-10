@@ -24,13 +24,13 @@ const intervalSecMap  = {
 
 class Ohlvc {
   constructor(data) {
-    this.start_time = oarseFloat(data[0]);
-    this.open = oarseFloat(data[1]);
-    this.high = oarseFloat(data[2]);
-    this.low = oarseFloat(data[3]);
-    this.close = oarseFloat(data[4]);
-    this.volume = oarseFloat(data[5]);
-    this.end_time = oarseFloat(data[6]);
+    this.start_time = parseFloat(data[0]);
+    this.open = parseFloat(data[1]);
+    this.high = parseFloat(data[2]);
+    this.low = parseFloat(data[3]);
+    this.close = parseFloat(data[4]);
+    this.volume = parseFloat(data[5]);
+    this.end_time = parseFloat(data[6]);
   }
 }
 
@@ -117,14 +117,14 @@ class Token {
 
         // Organize data
         new_range.forEach(data => {
-          mai.ohlcv.append(Ohlvc(data))
+          mai.ohlcv.push(new Ohlvc(data))
         })
 
         // Append moving average instance to TimeInterval
-        ih.moving_average_instances.append(mai);
+        ih.moving_average_instances.push(mai);
       })
 
-      this.time_interval_instances.append(ih);
+      this.time_interval_instances.push(ih);
 
     })
   }
