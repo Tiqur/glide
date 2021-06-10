@@ -93,53 +93,56 @@ class Token {
   }
 
   async download_history() {
-    // Download data for each time range and moving average range
-    this.time_ranges.forEach(async (time_range) => {
-      // Initialize interval history
-      const ih = new TimeInterval(time_range);
-      
-      // Emas rely on previous emas.  Calculate extra for more precision.
-      const download_range = Math.max.apply(Math, this.ema_ranges) + this.precision;
-      
-      // Fetch historical data
-      let historical_data = [];
-
-      // Download data in chunks ( mostly for if precision + max ema range is greater than 1000 )
-      let download_range_index = download_range;
-
-      while (download_range_index > 0) {
-
-        // Calc amount of milliseconds to download for current chunk
-        const interval_ms = intervalSecMap[time_range] * download_range_index * 1000;
+    return new Promise(resolve => {
+      // Download data for each time range and moving average range
+      this.time_ranges.forEach(async (time_range) => {
+        // Initialize interval history
+        const ih = new TimeInterval(time_range);
         
-        const partial_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${Date.now() - interval_ms}&limit=1000`)).data;
-        historical_data = [...historical_data, ...partial_data];
+        // Emas rely on previous emas.  Calculate extra for more precision.
+        const download_range = Math.max.apply(Math, this.ema_ranges) + this.precision;
+        
+        // Fetch historical data
+        let historical_data = [];
 
-        download_range_index -= partial_data.length;
-      }
+        // Download data in chunks ( mostly for if precision + max ema range is greater than 1000 )
+        let download_range_index = download_range;
 
-      //console.log(historical_data.length)
+        while (download_range_index > 0) {
 
-      // Optimize downloads by only downloading the necessary data per token
-      this.ema_ranges.forEach(ma_range => {
+          // Calc amount of milliseconds to download for current chunk
+          const interval_ms = intervalSecMap[time_range] * download_range_index * 1000;
+          
+          const partial_data = (await axios.get(`https://api.binance.com/api/v3/klines?symbol=${this.token}&interval=${time_range}&startTime=${Date.now() - interval_ms}&limit=1000`)).data;
+          historical_data = [...historical_data, ...partial_data];
 
-        // Initialize moving average interval instance
-        const mai = new MovingAverageInterval(ma_range);
+          download_range_index -= partial_data.length;
+        }
 
-        // new data range
-        const new_range = historical_data.slice(-(ma_range + this.precision));
+        //console.log(historical_data.length)
 
-        // Organize data
-        new_range.forEach(data => {
-          mai.ohlcv.push(new Ohlvc(data))
+        // Optimize downloads by only downloading the necessary data per token
+        this.ema_ranges.forEach(ma_range => {
+
+          // Initialize moving average interval instance
+          const mai = new MovingAverageInterval(ma_range);
+
+          // new data range
+          const new_range = historical_data.slice(-(ma_range + this.precision));
+
+          // Organize data
+          new_range.forEach(data => {
+            mai.ohlcv.push(new Ohlvc(data))
+          })
+
+          // Append moving average instance to TimeInterval
+          ih.moving_average_instances.push(mai);
         })
 
-        // Append moving average instance to TimeInterval
-        ih.moving_average_instances.push(mai);
+        this.time_interval_instances.push(ih);
+
       })
-
-      this.time_interval_instances.push(ih);
-
+      resolve();
     })
   }
 }
@@ -149,21 +152,24 @@ const DownloadHistoricalData = (props) => {
   const [logs, setLogs] = logState;
 
   useEffect(() => {
-    const tokens = ['DOGEUSDT'];
+    const tokens = ['DOGEUSDT', 'MATICUSDT'];
     const timeIntervals = ['1m', '5m'];
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;
 
-    tokens.forEach(token => {
+    // Using recursion instead of forEach because asyncronous calls weren't working
+    const download_data = () => {
+      const token = tokens.shift();
       setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Downloading data for ${token}...`}])
       const newToken = new Token(token, precision, emaIntervals, timeIntervals);
-      newToken.download_history();
-    })
+      newToken.download_history().then(() => {
+        if (tokens.length > 0) download_data();
+      })
+    }
+    download_data();
+
   }, [])
-  return (
-    <>
-    </>
-  )
+  return null;
 }
 
 export default DownloadHistoricalData;
