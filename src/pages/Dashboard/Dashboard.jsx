@@ -20,7 +20,7 @@ const Dashboard = () => {
     const msg = e.message;
     const dateMessage = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     const timeMessage = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    return <Text>[{dateMessage} {timeMessage}] {msg}</Text>
+    return <Text key={logs.indexOf(e)}>[{dateMessage} {timeMessage}] {msg}</Text>
   })
 
 

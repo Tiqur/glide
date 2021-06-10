@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useEffect } from 'react';
+import { GlobalContext } from '../components/GlobalContext.jsx';
+import { useContext } from 'react';
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -143,16 +145,21 @@ class Token {
 }
 
 const DownloadHistoricalData = (props) => {
+  const { statusState, logState } = useContext(GlobalContext);
+  const [logs, setLogs] = logState;
+
   useEffect(() => {
-    const tokens = ['DOGEUSDT']; const timeIntervals = ['1m', '5m'];
+    const tokens = ['DOGEUSDT', 'MATICUSDT'];
+    const timeIntervals = ['1m', '5m'];
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;
 
     tokens.forEach(token => {
+      setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Downloading data for ${token}...`}])
       const newToken = new Token(token, precision, emaIntervals, timeIntervals);
       newToken.download_history();
     })
-  })
+  }, [])
   return (
     <>
     </>

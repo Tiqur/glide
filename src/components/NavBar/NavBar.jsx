@@ -26,11 +26,12 @@ const NavBar = () => {
   const handleStatusClick = () => {
     if (status == 'idle') {
       setStatus('loading');
+      setLogs([...logs, {date: new Date(), message: 'Starting...'}])
       setTimeout(() => {
-        setLogs([...logs, {date: new Date(), message: 'Starting glide...'}])
-        //setStatus('running')
+        setStatus('running')
       }, 2000)
     } else if (status == 'running') {
+      setLogs([...logs, {date: new Date(), message: 'Stopping...'}])
       setStatus('loading')
       setTimeout(() => {
         setStatus('idle')
