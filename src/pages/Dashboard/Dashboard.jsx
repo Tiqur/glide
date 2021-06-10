@@ -30,6 +30,8 @@ const Dashboard = () => {
         />
         <div className={styles.logsContainer}>
         </div>
+        <div className={styles.statisticsContainer}>
+        </div>
       </div>
     </>
   )

@@ -5,8 +5,9 @@
   height: calc(100vh - 7.5em);
   grid-gap: 1.5em;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-template-areas: "a b";
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "a b"
+                       "a c"
 }
 
 .editor {
@@ -15,10 +16,17 @@
   grid-area: a;
 }
 
-.logsContainer {
+.statisticsContainer {
   background: #242A39;
   border-radius: 8px;
   grid-area: b;
 }
+
+.logsContainer {
+  background: #242A39;
+  border-radius: 8px;
+  grid-area: c;
+}
+
 
 

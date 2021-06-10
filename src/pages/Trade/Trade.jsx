@@ -18,7 +18,6 @@ const Dashboard = () => {
         <div className={styles.settingsContainer}/>
         <div className={styles.chartCarousel}/>
       </div>
-      
     </>
   )
 }
