@@ -15,6 +15,14 @@ const Dashboard = () => {
   const [config, setConfig] = configState;
   const [logs, setLogs] = logState;
 
+  const logElements = logs.map(e => {
+    const date = e.date;
+    const msg = e.message;
+    const dateMessage = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+    const timeMessage = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    return <Text>[{dateMessage} {timeMessage}] {msg}</Text>
+  })
+
 
   return (
     <>
@@ -32,9 +40,7 @@ const Dashboard = () => {
           }}
         />
         <div className={styles.logsContainer}>
-          {logs.map(e => {
-            <Text>{e}</Text>
-          })}
+          {logElements}
         </div>
         <div className={styles.statisticsContainer}>
         </div>

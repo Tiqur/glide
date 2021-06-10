@@ -19,14 +19,16 @@ const NavLink = (props) => {
 }
 
 const NavBar = () => {
-  const { statusState } = useContext(GlobalContext);
+  const { statusState, logState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [logs, setLogs] = logState;
 
   const handleStatusClick = () => {
     if (status == 'idle') {
       setStatus('loading');
       setTimeout(() => {
-        setStatus('running')
+        setLogs([...logs, {date: new Date(), message: 'Starting glide...'}])
+        //setStatus('running')
       }, 2000)
     } else if (status == 'running') {
       setStatus('loading')
@@ -63,9 +65,9 @@ const NavBar = () => {
         </div>
       </div>
       <div className={styles.content}>
+        <NavLink to='/trade' text='Trade'/>
         <NavLink to='/dashboard' text='Dashboard'/>
         <NavLink to='/charts' text='Charts'/>
-        <NavLink to='/trade' text='Trade'/>
         <NavLink to='/logs' text='Logs'/>
 
         <StatusButton/>
