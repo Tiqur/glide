@@ -31,6 +31,29 @@ class TimeInterval {
   }
 }
 
+class MovingAverageInterval {
+  constructor(ma_interval) {
+    this.ma_interval = ma_interval;
+    this.ohlcv = [];
+    this.emas = [];
+  }
+
+  calcEmas() {
+    // Extract closing prices from specified interval
+    closing_prices = #Get all close attributes from ohlcv objects
+  
+    // Calculate SMA for first range, then delete from list to avoid using data from future
+    data_range = closing_prices.slice(0, this.ma_interval);
+    this.emas.push(#calcsma(data_range))
+
+    // List without the first (ma) elements
+    new_data_range = closing_prices.slice(this.ma_interval, closing_prices.length);
+
+    for (i=0; i < new_data_range.length-1; i++) {
+      this.emas.push(#ema(new_data_range[i], this.emas[this.emas.length-1], this.ma_interval));
+    }
+  }
+}
 
 
 // Class specific to each token
