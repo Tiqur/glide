@@ -22,6 +22,16 @@ const intervalSecMap  = {
         '1M'  : DAY * 30
     }
 
+class TimeInterval {
+  constructor(interval) {
+    this.candle_time_interval = interval;
+    this.moving_average_instances = [];
+    this.last_4ma;
+    this.first = true;
+  }
+}
+
+
 
 // Class specific to each token
 // Holds Interval instances for each time interval
