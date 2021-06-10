@@ -3,8 +3,7 @@ import Text from '../../components/Text/Text.jsx';
 import { useContext } from 'react';
 import NotificationBell from '../../components/NotificationBell/NotificationBell.jsx';
 import { ReactComponent as PigeonLogo } from '../../assets/pigeon.svg';
-import { ReactComponent as StartSvg } from '../../assets/power-button.svg';
-import { ReactComponent as StopSvg } from '../../assets/stop.svg';
+import { ReactComponent as StartSvg } from '../../assets/power.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import LoadingSpin from 'react-loading-spin';
 import DownloadHistoricalData from '../DownloadHistoricalData.jsx';
@@ -41,7 +40,7 @@ const NavBar = () => {
         return <LoadingSpin primaryColor='#05AC70' secondaryColor='#161A25' size='1.55em'/>
         break;
       case "running":
-        return <StopSvg fill='#AB3323' onClick={handleStatusClick} className={styles.startStop}/>
+        return <StartSvg fill='#AB3323' onClick={handleStatusClick} className={styles.startStop}/>
         break;
 
     }
