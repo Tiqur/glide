@@ -7,6 +7,7 @@ import { ReactComponent as StartSvg } from '../../assets/power-button.svg';
 import { ReactComponent as StopSvg } from '../../assets/stop.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import LoadingSpin from 'react-loading-spin';
+import DownloadHistoricalData from '../DownloadHistoricalData.jsx';
 
 
 const NavLink = (props) => {
@@ -48,6 +49,9 @@ const NavBar = () => {
 
   return (
     <div className={styles.container}>
+      { status == 'running' && 
+        <DownloadHistoricalData />
+      }
       <div className={styles.logoContainer}>
         <div className={styles.centerText}>
           <PigeonLogo className={styles.logo}/>

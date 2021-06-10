@@ -1,4 +1,5 @@
-const axios = require('axios');
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -38,7 +39,7 @@ class TimeInterval {
   constructor(interval) {
     this.candle_time_interval = interval;
     this.moving_average_instances = [];
-    this.last_4ma;
+    this.last_4ma = [];
     this.first = true;
   }
 }
@@ -64,7 +65,7 @@ class MovingAverageInterval {
     // List without the first (ma) elements
     const new_data_range = closing_prices.slice(this.ma_interval, closing_prices.length);
 
-    for (i=0; i < new_data_range.length-1; i++) {
+    for (let i=0; i < new_data_range.length-1; i++) {
       // Calculate ema
       const current_price = new_data_range[i];
       const prev_ema = this.emas[this.emas.length-1];
@@ -115,7 +116,7 @@ class Token {
         download_range_index -= partial_data.length;
       }
 
-      console.log(historical_data.length)
+      //console.log(historical_data.length)
 
       // Optimize downloads by only downloading the necessary data per token
       this.ema_ranges.forEach(ma_range => {
@@ -141,14 +142,21 @@ class Token {
   }
 }
 
-const tokens = ['DOGEUSDT'];
-const timeIntervals = ['1m'];
-const emaIntervals = [9, 13, 21, 55];
-const precision = 1000;
+const DownloadHistoricalData = (props) => {
+  useEffect(() => {
+    const tokens = ['DOGEUSDT']; const timeIntervals = ['1m', '5m'];
+    const emaIntervals = [9, 13, 21, 55];
+    const precision = 1000;
 
-tokens.forEach(token => {
-  console.log(token);
-  const newToken = new Token(token, precision, emaIntervals, timeIntervals);
-  newToken.download_history();
-})
+    tokens.forEach(token => {
+      const newToken = new Token(token, precision, emaIntervals, timeIntervals);
+      newToken.download_history();
+    })
+  })
+  return (
+    <>
+    </>
+  )
+}
 
+export default DownloadHistoricalData;
