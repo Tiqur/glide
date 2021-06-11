@@ -37,10 +37,17 @@ const DownloadHistoricalData = (props) => {
       const tempTokenData = tokenData;
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
-        console.log(url)
+        
+        // Actually download the historical data
+        axios.get(url).then(data => {
+          const partial_data = data.data;
+
+          // Append new data to previously downloaded data ( if any )
+          const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
+          tempTokenData[request.token][request.time_interval] = new_data;
+        })
 
         // Update token data state
-        tempTokenData[request.token][request.time_interval] = 1;
         setTokenData(tempTokenData);
 
         resolve()
@@ -61,7 +68,7 @@ const DownloadHistoricalData = (props) => {
       tokens.forEach(token => {
         tempTokenData[token] = {};
         timeIntervals.forEach(time_interval => {
-
+          tempTokenData[token][time_interval] = [];
           // Amount of klines left to download
           let data_left = max_ema_interval + precision;
 
@@ -83,8 +90,8 @@ const DownloadHistoricalData = (props) => {
     // Config variables
     const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT'];
     const timeIntervals = ['1m', '3m']
-    const emaIntervals = [9, 13, 21, 55];
-    const precision = 1000;
+    const emaIntervals = [2];
+    const precision = 0;
 
     // Hold requests to be fetched later
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])
