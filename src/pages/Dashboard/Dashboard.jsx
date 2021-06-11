@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
   const logsContainerRef = useRef(null);
+  const loadingStates = ['.', '..', '...'];
 
   const logElements = logs.map(e => {
     const date = e.date;
@@ -21,19 +22,24 @@ const Dashboard = () => {
       <Text key={logs.indexOf(e)}>
         <Text inline color='#05AC70'>[<Text inline>{dateMessage} {timeMessage}</Text>]: </Text> 
         <Text inline color='white'>{msg}</Text>
+
+        {e.loadingState > -1 && 
+          <Text inline color='white'>{loadingStates[e.loadingState]}</Text>
+        }
       </Text>
     ) 
   })
 
   useEffect(() => {
-    
-    // Animate three dots on log ( if any )
+    // Loading animation
     const logLoadingInerval = setInterval(() => {
       const lastLog = logs[logs.length-1] || {};
-      console.log(lastLog)
-      if (lastLog.loading && lastLog.message && lastLog.message.length > 0) {
-        const newMsg = lastLog.message.slice(0, lastLog.message.length-1);
-        setLogs((oldLogs) => [...oldLogs.slice(0, oldLogs.length-1), {date: lastLog.date, loading: true, message: newMsg}]);
+
+      if (lastLog.loading) {
+        if (!lastLog.loadingState) lastLog.loadingState = 0;
+        const newLoadingState = lastLog.loadingState < loadingStates.length-1 ? lastLog.loadingState+1 : 0;
+        console.log(loadingStates[lastLog.loadingState])
+        setLogs((oldLogs) => [...oldLogs.slice(0, oldLogs.length-1), {date: lastLog.date, loading: true, message: lastLog.message, loadingState: newLoadingState}]);
       }
     }, 300)
 
