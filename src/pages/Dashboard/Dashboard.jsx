@@ -11,8 +11,9 @@ import Text from '../../components/Text/Text.jsx';
 
 
 const Dashboard = () => {
-  const { configState, logState } = useContext(GlobalContext);
+  const { configState, logState, tokenDataState } = useContext(GlobalContext);
   const [config, setConfig] = configState;
+  const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
   const logsContainerRef = useRef(null);
 
@@ -36,7 +37,7 @@ const Dashboard = () => {
       <div className={styles.mainContainer}>
         <Editor
           className={styles.editor}
-          value={config}
+          value={JSON.stringify(tokenData, null, 4)}
           onValueChange={(code) => setConfig(code)}
           highlight={(code) => highlight(code, languages.js)}
           padding={10}

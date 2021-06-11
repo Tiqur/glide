@@ -31,6 +31,7 @@ const NavBar = () => {
     } else if (status == 'running') {
       setLogs([...logs, {date: new Date(), message: 'Stopping...'}])
       setStatus('loading')
+      setTokenData({});
       setTimeout(() => {
         setStatus('idle')
       }, 1000)
