@@ -24,7 +24,15 @@ const time_interval_to_ms  = {
   '1w'  : DAY * 7,
   '1M'  : DAY * 30
 }
-
+const emulate_request = (request) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
+      console.log(url)
+      resolve()
+    }, 500);
+  })
+}
 
 // Queue requests for every interval and token in chunks
 const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
@@ -44,8 +52,7 @@ const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
         const interval_ms = time_interval_to_ms[time_interval] * data_left;
 
         while (data_left > 0) {
-          const request = `https://api.binance.com/api/v3/klines?symbol=${token}&interval=${time_interval}&startTime=${Date.now() - interval_ms}&limit=1000`;
-          temp_requests_queue.push(request)
+          temp_requests_queue.push({token: token, time_interval: time_interval, interval_ms: interval_ms})
           data_left -= 1000;
         } 
       })
@@ -55,13 +62,11 @@ const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
 }
 
 
-
 const DownloadHistoricalData = (props) => {
   const { statusState, logState } = useContext(GlobalContext);
   const [logs, setLogs] = logState;
 
   useEffect(() => {
-    setLogs([...logs, {date: new Date(), message: 'Queuing downloads...'}])
 
     // Config variables
     const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT']
@@ -70,8 +75,21 @@ const DownloadHistoricalData = (props) => {
     const precision = 1000;
 
     // Hold requests to be fetched later
+    setLogs([...logs, {date: new Date(), message: 'Queuing downloads...'}])
     const requests_queue = queue_requests(tokens, timeIntervals, emaIntervals, precision);
     
+    // Fetch Data recursively
+    setLogs([...logs, {date: new Date(), message: 'Fetching Data...'}])
+    const fetch_data = () => {
+      const request = requests_queue.pop();
+      emulate_request(request).then(() => {
+        if (requests_queue.length > 0) fetch_data();
+      })
+    }
+    fetch_data();
+
+
+
   }, [])
   return null;
 }
