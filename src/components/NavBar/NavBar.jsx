@@ -25,11 +25,8 @@ const NavBar = () => {
 
   const handleStatusClick = () => {
     if (status == 'idle') {
-      setStatus('loading');
       setLogs([...logs, {date: new Date(), message: 'Starting...'}])
-      setTimeout(() => {
-        setStatus('running')
-      }, 2000)
+      setStatus('starting');
     } else if (status == 'running') {
       setLogs([...logs, {date: new Date(), message: 'Stopping...'}])
       setStatus('loading')
@@ -45,6 +42,7 @@ const NavBar = () => {
         return <StartSvg fill='#05AC70' onClick={handleStatusClick} className={styles.startStop}/>
         break;
       case "loading":
+      case "starting":
         return <LoadingSpin primaryColor='#05AC70' secondaryColor='#161A25' size='1.55em'/>
         break;
       case "running":
@@ -56,7 +54,7 @@ const NavBar = () => {
 
   return (
     <div className={styles.container}>
-      { status == 'running' && 
+      { status == 'starting' && 
         <DownloadHistoricalData />
       }
       <div className={styles.logoContainer}>
@@ -68,8 +66,8 @@ const NavBar = () => {
       <div className={styles.content}>
         <NavLink to='/trade' text='Trade'/>
         <NavLink to='/dashboard' text='Dashboard'/>
-        <NavLink to='/trade' text='Charts'/>
-        <NavLink to='/trade' text='Logs'/>
+        <NavLink to='/charts' text='Charts'/>
+        <NavLink to='/logs' text='Logs'/>
 
         <StatusButton/>
 

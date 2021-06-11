@@ -64,6 +64,7 @@ const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
 
 const DownloadHistoricalData = (props) => {
   const { statusState, logState } = useContext(GlobalContext);
+  const [status, setStatus] = statusState;
   const [logs, setLogs] = logState;
 
   useEffect(() => {
@@ -80,14 +81,17 @@ const DownloadHistoricalData = (props) => {
     
     // Fetch Data recursively
     const fetch_data = () => {
-      const request = requests_queue.shift();
-      setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
-      emulate_request(request).then(() => {
-        if (requests_queue.length > 0) fetch_data();
+      return new Promise(resolve => {
+        const request = requests_queue.shift();
+        setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
+        emulate_request(request).then(() => {
+          requests_queue.length > 0 ? fetch_data().then(resolve) : resolve();
+        })
       })
     }
-    fetch_data();
-
+    fetch_data().then(() => {
+      setStatus('running');
+    });
 
 
   }, [])

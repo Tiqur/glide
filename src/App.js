@@ -14,7 +14,6 @@ function App() {
               <Redirect to="/trade"/>
             </Route>
             <Route exact path='/trade' component={Trade}/>
-            <Route exact path='/trade' component={Trade}/>
             <Route exact path='/dashboard' component={Dashboard}/>
           </Layout>
         </Switch>
