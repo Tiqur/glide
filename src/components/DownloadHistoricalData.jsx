@@ -48,12 +48,10 @@ const DownloadHistoricalData = (props) => {
       const tempTokenData = tokenData;
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
-        console.log(Date.now() - request.interval_ms)
         
         // Actually download the historical data
         axios.get(url).then(data => {
           const partial_data = (data.data).map(e => convertToOhlvc(e));
-          console.log((data.data).length)
 
           // Append new data to previously downloaded data ( if any )
           const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
@@ -71,25 +69,28 @@ const DownloadHistoricalData = (props) => {
 
   // Queue requests for every interval and token in chunks
   const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
-
       // Max ema interval ( for optimized downloads )
       const max_ema_interval = Math.max.apply(Math, emaIntervals);
 
       const tempTokenData = tokenData;
-
       const temp_requests_queue = [];
 
       tokens.forEach(token => {
+        // Initialize token with empty object
         tempTokenData[token] = {};
         timeIntervals.forEach(time_interval => {
-          tempTokenData[token][time_interval] = [];
+
           // Amount of klines left to download
           let data_left = max_ema_interval + precision;
 
-          // Calc amount of milliseconds to download for current chunk
-          const interval_ms = time_interval_to_ms[time_interval] * data_left;
-
+          // Initialize token interval data with empty array
+          tempTokenData[token][time_interval] = [];
+          
+          // Queue urls
           while (data_left > 0) {
+            // Calc amount of milliseconds to download for current chunk
+            const interval_ms = time_interval_to_ms[time_interval] * (data_left > 0 ? data_left : (max_ema_interval + precision) % 1000);
+
             temp_requests_queue.push({token: token, time_interval: time_interval, interval_ms: interval_ms})
             data_left -= 1000;
           } 
