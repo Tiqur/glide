@@ -17,7 +17,12 @@ const Dashboard = () => {
     const msg = e.message;
     const dateMessage = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     const timeMessage = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    return <Text key={logs.indexOf(e)}>[{dateMessage} {timeMessage}] {msg}</Text>
+    return (
+      <Text key={logs.indexOf(e)}>
+        <Text inline color='#05AC70'>[<Text inline>{dateMessage} {timeMessage}</Text>]: </Text> 
+        <Text inline color='white'>{msg}</Text>
+      </Text>
+    ) 
   })
 
   useEffect(() => {
