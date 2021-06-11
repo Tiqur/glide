@@ -46,6 +46,13 @@ const DownloadHistoricalData = (props) => {
   const emulate_request = (request) => {
     return new Promise(resolve => {
       const tempTokenData = tokenData;
+      
+      // Initialize token with empty object
+      tempTokenData[request.token] = tokenData[request.token] || {};
+
+      // Initialize token interval data with empty array
+      tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || [];
+          
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
         
@@ -76,16 +83,11 @@ const DownloadHistoricalData = (props) => {
       const temp_requests_queue = [];
 
       tokens.forEach(token => {
-        // Initialize token with empty object
-        tempTokenData[token] = {};
         timeIntervals.forEach(time_interval => {
 
           // Amount of klines left to download
           let data_left = max_ema_interval + precision;
 
-          // Initialize token interval data with empty array
-          tempTokenData[token][time_interval] = [];
-          
           // Queue urls
           while (data_left > 0) {
             // Calc amount of milliseconds to download for current chunk
@@ -97,14 +99,13 @@ const DownloadHistoricalData = (props) => {
         })
       })
 
-    setTokenData(temp_requests_queue);
     return temp_requests_queue;
   }
 
   useEffect(() => {
     // Config variables
     const tokens = ['DOGEUSDT'];
-    const timeIntervals = ['1m', '3m']
+    const timeIntervals = ['1m', '3m'];
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;
 
