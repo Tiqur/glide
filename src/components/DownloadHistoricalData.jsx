@@ -30,7 +30,7 @@ const emulate_request = (request) => {
       const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
       console.log(url)
       resolve()
-    }, 500);
+    }, 350);
   })
 }
 
@@ -75,13 +75,13 @@ const DownloadHistoricalData = (props) => {
     const precision = 1000;
 
     // Hold requests to be fetched later
-    setLogs([...logs, {date: new Date(), message: 'Queuing downloads...'}])
+    setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])
     const requests_queue = queue_requests(tokens, timeIntervals, emaIntervals, precision);
     
     // Fetch Data recursively
-    setLogs([...logs, {date: new Date(), message: 'Fetching Data...'}])
     const fetch_data = () => {
-      const request = requests_queue.pop();
+      const request = requests_queue.shift();
+      setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
       emulate_request(request).then(() => {
         if (requests_queue.length > 0) fetch_data();
       })
