@@ -81,7 +81,7 @@ const DownloadHistoricalData = (props) => {
 
   useEffect(() => {
     // Config variables
-    const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT']
+    const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT', 'BTCUSDT', 'ETCUSDT', 'XLMUSDT', 'ETHUSDT']; 
     const timeIntervals = ['1m', '3m']
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;

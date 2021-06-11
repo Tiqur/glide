@@ -10,16 +10,18 @@
                        "a c"
 }
 
-.editor {
-  background: #242A39;
-  border-radius: 8px;
-  grid-area: a;
-}
 
 .statisticsContainer {
   background: #242A39;
   border-radius: 8px;
   grid-area: c;
+}
+
+.editorArea {
+  overflow: auto;
+  background: #242A39;
+  border-radius: 8px;
+  grid-area: a;
 }
 
 .logsContainer {

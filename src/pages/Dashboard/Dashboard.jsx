@@ -35,17 +35,18 @@ const Dashboard = () => {
     <>
       <NavBar />
       <div className={styles.mainContainer}>
-        <Editor
-          className={styles.editor}
-          value={JSON.stringify(tokenData, null, 4)}
-          onValueChange={(code) => setConfig(code)}
-          highlight={(code) => highlight(code, languages.js)}
-          padding={10}
-          style={{
-            fontFamily: '"Roboto", "Fira Mono", monospace',
-            fontSize: 20,
-          }}
-        />
+        <div className={styles.editorArea}>
+          <Editor
+            value={JSON.stringify(tokenData, null, 4)}
+            onValueChange={(code) => setConfig(code)}
+            highlight={(code) => highlight(code, languages.js)}
+            padding={10}
+            style={{
+              fontFamily: '"Roboto", "Fira Mono", monospace',
+              fontSize: 20,
+            }}
+          />
+        </div>
         <div ref={logsContainerRef} className={styles.logsContainer}>
           {logElements}
         </div>
