@@ -25,6 +25,17 @@ const time_interval_to_ms  = {
   '1M'  : DAY * 30
 }
 
+const convertToOhlvc = (data) => {
+  return ({
+    start_time: data[0],
+    open: parseFloat(data[1]),
+    high: parseFloat(data[2]),
+    low: parseFloat(data[3]),
+    close: parseFloat(data[4]),
+    volume: parseFloat(data[5]),
+    end_time: data[6]
+  })
+}
 
 const DownloadHistoricalData = (props) => {
   const { statusState, logState, tokenDataState } = useContext(GlobalContext);
@@ -40,17 +51,18 @@ const DownloadHistoricalData = (props) => {
         
         // Actually download the historical data
         axios.get(url).then(data => {
-          const partial_data = data.data;
+          const partial_data = (data.data).map(e => convertToOhlvc(e));
 
           // Append new data to previously downloaded data ( if any )
           const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
           tempTokenData[request.token][request.time_interval] = new_data;
+
+          // Update token data state
+          setTokenData(tempTokenData);
+
+          resolve()
         })
-
-        // Update token data state
-        setTokenData(tempTokenData);
-
-        resolve()
+      // Be kind to api
       }, 350);
     })
   }
@@ -88,10 +100,10 @@ const DownloadHistoricalData = (props) => {
 
   useEffect(() => {
     // Config variables
-    const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT'];
+    const tokens = ['DOGEUSDT'];
     const timeIntervals = ['1m', '3m']
-    const emaIntervals = [2];
-    const precision = 0;
+    const emaIntervals = [9, 13, 21, 55];
+    const precision = 1000;
 
     // Hold requests to be fetched later
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])
@@ -109,6 +121,7 @@ const DownloadHistoricalData = (props) => {
     }
     fetch_data().then(() => {
       setStatus('running');
+      setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Done!`}])
       console.log(tokenData)
     });
 
