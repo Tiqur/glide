@@ -154,7 +154,6 @@ const DownloadHistoricalData = (props) => {
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])
     const requests_queue = queue_requests(tokens, timeIntervals, emaIntervals, precision);
     const tokens_to_download = [...tokens];
-    console.log(tokens_to_download)
     
     // Fetch Data recursively
     const fetch_data = () => {
@@ -165,7 +164,7 @@ const DownloadHistoricalData = (props) => {
         // Log once per token
         if (tokens_to_download.indexOf(r_token) != -1) {
           tokens_to_download.splice(tokens_to_download.indexOf(r_token), 1);
-          setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Downloading historical data for ${r_token}...`}]);
+          setLogs((oldLogs) => [...oldLogs, {date: new Date(), loading: true, message: `Downloading historical data for ${r_token}...`}]);
         }
         send_request(request, tokenData, setTokenData).then(() => {
           requests_queue.length > 0 ? fetch_data().then(resolve) : resolve();

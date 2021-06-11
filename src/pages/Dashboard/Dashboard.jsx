@@ -26,8 +26,22 @@ const Dashboard = () => {
   })
 
   useEffect(() => {
+    
+    // Animate three dots on log ( if any )
+    const logLoadingInerval = setInterval(() => {
+      const lastLog = logs[logs.length-1] || {};
+      console.log(lastLog)
+      if (lastLog.loading && lastLog.message && lastLog.message.length > 0) {
+        const newMsg = lastLog.message.slice(0, lastLog.message.length-1);
+        setLogs((oldLogs) => [...oldLogs.slice(0, oldLogs.length-1), {date: lastLog.date, loading: true, message: newMsg}]);
+      }
+    }, 300)
+
     // Auto scroll to bottom
     logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
+
+    // Clear interval
+    return () => clearInterval(logLoadingInerval);
   }, [logs])
 
 
