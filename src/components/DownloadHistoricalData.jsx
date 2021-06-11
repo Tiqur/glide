@@ -93,10 +93,13 @@ const DownloadHistoricalData = (props) => {
 
           // Extract closing prices from specified interval
           const closing_prices = temp_ohlvc.map(e => e.close);
+          console.log(closing_prices)
 
           // Calculate SMA for first range, then delete from list to avoid using data from future
           const data_range = closing_prices.slice(0, ema_interval);
-          const new_sma = data_range.reduce((a, b) => a + b, 0);
+          console.log(data_range)
+          const new_sma = data_range.reduce((a, b) => a + b, 0) / ema_interval;
+          console.log(new_sma)
           temp_emas.push(new_sma);
 
           // List without the first (sma) elements
@@ -107,7 +110,7 @@ const DownloadHistoricalData = (props) => {
             const current_price = new_data_range[i];
             const prev_ema = temp_emas[temp_emas.length-1];
             const k = 2 / (ema_interval + 1);
-            temp_emas.push(current_price * k + prev_ema * (1 - k));
+            //temp_emas.push(current_price * k + prev_ema * (1 - k));
           }
         })
       })
