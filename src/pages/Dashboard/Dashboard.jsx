@@ -1,7 +1,7 @@
 import styles from './styles.module.scss';
 import NavBar from '../../components/NavBar/NavBar.jsx';
 import Editor from "react-simple-code-editor";
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import { GlobalContext } from '../../components/GlobalContext.jsx';
 import 'prismjs/components/prism-clike';
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const { configState, logState } = useContext(GlobalContext);
   const [config, setConfig] = configState;
   const [logs, setLogs] = logState;
+  const logsContainerRef = useRef(null);
 
   const logElements = logs.map(e => {
     const date = e.date;
@@ -22,6 +23,11 @@ const Dashboard = () => {
     const timeMessage = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     return <Text key={logs.indexOf(e)}>[{dateMessage} {timeMessage}] {msg}</Text>
   })
+
+  useEffect(() => {
+    // Auto scroll to bottom
+    logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
+  }, [logs])
 
 
   return (
@@ -39,7 +45,7 @@ const Dashboard = () => {
             fontSize: 20,
           }}
         />
-        <div className={styles.logsContainer}>
+        <div ref={logsContainerRef} className={styles.logsContainer}>
           {logElements}
         </div>
         <div className={styles.statisticsContainer}>
