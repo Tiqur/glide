@@ -145,20 +145,28 @@ const DownloadHistoricalData = (props) => {
 
   useEffect(() => {
     // Config variables
-    const tokens = ['DOGEUSDT'];
-    const timeIntervals = ['1m', '3m'];
+    const tokens = ['DOGEUSDT', 'MATICUSDT', 'BTCUSDT', 'ETHUSDT'];
+    const timeIntervals = ['1m', '3m', '5m'];
     const emaIntervals = [9, 13, 21, 55];
     const precision = 1000;
 
     // Hold requests to be fetched later
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])
     const requests_queue = queue_requests(tokens, timeIntervals, emaIntervals, precision);
+    const tokens_to_download = [...tokens];
+    console.log(tokens_to_download)
     
     // Fetch Data recursively
     const fetch_data = () => {
       return new Promise(resolve => {
         const request = requests_queue.shift();
-        setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
+        const r_token = request.token;
+
+        // Log once per token
+        if (tokens_to_download.indexOf(r_token) != -1) {
+          tokens_to_download.splice(tokens_to_download.indexOf(r_token), 1);
+          setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Downloading historical data for ${r_token}...`}]);
+        }
         send_request(request, tokenData, setTokenData).then(() => {
           requests_queue.length > 0 ? fetch_data().then(resolve) : resolve();
         })
