@@ -19,8 +19,9 @@ const NavLink = (props) => {
 }
 
 const NavBar = () => {
-  const { statusState, logState } = useContext(GlobalContext);
+  const { statusState, logState, tokenDataState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
 
   const handleStatusClick = () => {
@@ -48,13 +49,12 @@ const NavBar = () => {
       case "running":
         return <StartSvg fill='#AB3323' onClick={handleStatusClick} className={styles.startStop}/>
         break;
-
     }
   }
 
   return (
     <div className={styles.container}>
-      { status == 'starting' && 
+      { status === 'starting' && Object.keys(tokenData).length === 0 &&
         <DownloadHistoricalData />
       }
       <div className={styles.logoContainer}>

@@ -24,51 +24,62 @@ const time_interval_to_ms  = {
   '1w'  : DAY * 7,
   '1M'  : DAY * 30
 }
-const emulate_request = (request) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
-      console.log(url)
-      resolve()
-    }, 350);
-  })
-}
-
-// Queue requests for every interval and token in chunks
-const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
-
-    // Max ema interval ( for optimized downloads )
-    const max_ema_interval = Math.max.apply(Math, emaIntervals);
-
-    const temp_requests_queue = [];
-
-    tokens.forEach(token => {
-      timeIntervals.forEach(time_interval => {
-
-        // Amount of klines left to download
-        let data_left = max_ema_interval + precision;
-
-        // Calc amount of milliseconds to download for current chunk
-        const interval_ms = time_interval_to_ms[time_interval] * data_left;
-
-        while (data_left > 0) {
-          temp_requests_queue.push({token: token, time_interval: time_interval, interval_ms: interval_ms})
-          data_left -= 1000;
-        } 
-      })
-    })
-
-  return temp_requests_queue;
-}
 
 
 const DownloadHistoricalData = (props) => {
-  const { statusState, logState } = useContext(GlobalContext);
+  const { statusState, logState, tokenDataState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
 
-  useEffect(() => {
+  const emulate_request = (request) => {
+    return new Promise(resolve => {
+      const tempTokenData = tokenData;
+      setTimeout(() => {
+        const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
+        console.log(url)
 
+        // Update token data state
+        tempTokenData[request.token][request.time_interval] = 1;
+        setTokenData(tempTokenData);
+
+        resolve()
+      }, 350);
+    })
+  }
+
+  // Queue requests for every interval and token in chunks
+  const queue_requests = (tokens, timeIntervals, emaIntervals, precision) => {
+
+      // Max ema interval ( for optimized downloads )
+      const max_ema_interval = Math.max.apply(Math, emaIntervals);
+
+      const tempTokenData = tokenData;
+
+      const temp_requests_queue = [];
+
+      tokens.forEach(token => {
+        tempTokenData[token] = {};
+        timeIntervals.forEach(time_interval => {
+
+          // Amount of klines left to download
+          let data_left = max_ema_interval + precision;
+
+          // Calc amount of milliseconds to download for current chunk
+          const interval_ms = time_interval_to_ms[time_interval] * data_left;
+
+          while (data_left > 0) {
+            temp_requests_queue.push({token: token, time_interval: time_interval, interval_ms: interval_ms})
+            data_left -= 1000;
+          } 
+        })
+      })
+
+    setTokenData(temp_requests_queue);
+    return temp_requests_queue;
+  }
+
+  useEffect(() => {
     // Config variables
     const tokens = ['DOGEUSDT', 'MATICUSDT', 'ADAUSDT']
     const timeIntervals = ['1m', '3m']
@@ -84,13 +95,14 @@ const DownloadHistoricalData = (props) => {
       return new Promise(resolve => {
         const request = requests_queue.shift();
         setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
-        emulate_request(request).then(() => {
+        emulate_request(request, tokenData, setTokenData).then(() => {
           requests_queue.length > 0 ? fetch_data().then(resolve) : resolve();
         })
       })
     }
     fetch_data().then(() => {
       setStatus('running');
+      console.log(tokenData)
     });
 
 

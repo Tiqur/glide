@@ -7,6 +7,7 @@ const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [logs, setLogs] = useState([{date: new Date, message: 'Welcome to Glide! :)'}]);
+  const [tokenData, setTokenData] = useState({});
   const [status, setStatus] = useState('idle');
   const [config, setConfig] = useState(`{
       "watchlist": [
@@ -40,7 +41,7 @@ const GlobalProvider = (props) => {
   }
  
   return (
-    <GlobalContext.Provider value={{configState: [config, setConfig], statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts], logState: [logs, setLogs]}}>
+    <GlobalContext.Provider value={{tokenDataState: [tokenData, setTokenData], configState: [config, setConfig], statusState: [status, setStatus], priceState: [prices, setPrices], alertState: [alerts, setAlerts], logState: [logs, setLogs]}}>
       {props.children}
     </GlobalContext.Provider>
   )
