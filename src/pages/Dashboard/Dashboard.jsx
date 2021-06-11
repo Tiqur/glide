@@ -1,14 +1,9 @@
 import styles from './styles.module.scss';
 import NavBar from '../../components/NavBar/NavBar.jsx';
-import Editor from "react-simple-code-editor";
 import { useState, useContext, useEffect, useRef } from 'react';
-import { highlight, languages } from 'prismjs/components/prism-core';
 import { GlobalContext } from '../../components/GlobalContext.jsx';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism-tomorrow.css';
 import Text from '../../components/Text/Text.jsx';
-
+import ReactJson from 'react-json-view'
 
 const Dashboard = () => {
   const { configState, logState, tokenDataState } = useContext(GlobalContext);
@@ -36,16 +31,7 @@ const Dashboard = () => {
       <NavBar />
       <div className={styles.mainContainer}>
         <div className={styles.editorArea}>
-          <Editor
-            value={JSON.stringify(tokenData, null, 4)}
-            onValueChange={(code) => setConfig(code)}
-            highlight={(code) => highlight(code, languages.js)}
-            padding={10}
-            style={{
-              fontFamily: '"Roboto", "Fira Mono", monospace',
-              fontSize: 20,
-            }}
-          />
+          <ReactJson style={{background: '#242A39'}}collapsed={1} src={tokenData} theme='monokai'/>
         </div>
         <div ref={logsContainerRef} className={styles.logsContainer}>
           {logElements}
