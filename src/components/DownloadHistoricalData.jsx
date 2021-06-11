@@ -110,6 +110,7 @@ class Token {
         let download_range_index = download_range;
 
 
+        // Recursive download to avoid calling at the same time ( async not working )
         const r_download_klines = async () => {
 
           // Calc amount of milliseconds to download for current chunk

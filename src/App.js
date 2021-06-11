@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Trade from './pages/Trade/Trade.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Layout from './components/Layout/Layout.jsx';
@@ -10,6 +10,10 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Layout>
+            <Route exact path="/">
+              <Redirect to="/dashboard"/>
+            </Route>
+            <Route exact path='/trade' component={Trade}/>
             <Route exact path='/trade' component={Trade}/>
             <Route exact path='/dashboard' component={Dashboard}/>
           </Layout>
