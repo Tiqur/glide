@@ -48,10 +48,12 @@ const DownloadHistoricalData = (props) => {
       const tempTokenData = tokenData;
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
+        console.log(Date.now() - request.interval_ms)
         
         // Actually download the historical data
         axios.get(url).then(data => {
           const partial_data = (data.data).map(e => convertToOhlvc(e));
+          console.log((data.data).length)
 
           // Append new data to previously downloaded data ( if any )
           const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
@@ -122,7 +124,6 @@ const DownloadHistoricalData = (props) => {
     fetch_data().then(() => {
       setStatus('running');
       setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Done!`}])
-      console.log(tokenData)
     });
 
 
