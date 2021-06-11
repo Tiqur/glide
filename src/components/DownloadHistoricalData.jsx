@@ -47,13 +47,10 @@ const DownloadHistoricalData = (props) => {
     return new Promise(resolve => {
       const tempTokenData = tokenData;
       
-      // Initialize token and token interval with empty object
+      // Initialize with empty data
       tempTokenData[request.token] = tokenData[request.token] || {};
       tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || {};
-
-      // Initialize token interval ohlvc and emas with empty array
       tempTokenData[request.token][request.time_interval]['ohlvc'] = tempTokenData[request.token][request.time_interval]['ohlvc'] || [];
-      tempTokenData[request.token][request.time_interval]['emas'] = tempTokenData[request.token][request.time_interval]['emas'] || [];
           
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
@@ -84,22 +81,22 @@ const DownloadHistoricalData = (props) => {
   // Calculate emas for historical data
   const calc_historical_emas = (tokens, timeIntervals, emaIntervals) => {
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Calculating EMAs for historical data...`}])
+
     tokens.forEach(token => {
       timeIntervals.forEach(time_interval => {
+        const interval_data = tokenData[token][time_interval];
+        const temp_ohlvc = interval_data['ohlvc'];
+
         emaIntervals.forEach(ema_interval => {
-          // Temp values
-          const interval_data = tokenData[token][time_interval];
-          const [temp_ohlvc, temp_emas] = [interval_data['ohlvc'], interval_data['emas']];
+          tokenData[token][time_interval][ema_interval] = tokenData[token][time_interval][ema_interval] || [];
+          const temp_emas = tokenData[token][time_interval][ema_interval];
 
           // Extract closing prices from specified interval
           const closing_prices = temp_ohlvc.map(e => e.close);
-          console.log(closing_prices)
 
           // Calculate SMA for first range, then delete from list to avoid using data from future
           const data_range = closing_prices.slice(0, ema_interval);
-          console.log(data_range)
           const new_sma = data_range.reduce((a, b) => a + b, 0) / ema_interval;
-          console.log(new_sma)
           temp_emas.push(new_sma);
 
           // List without the first (sma) elements
@@ -110,7 +107,7 @@ const DownloadHistoricalData = (props) => {
             const current_price = new_data_range[i];
             const prev_ema = temp_emas[temp_emas.length-1];
             const k = 2 / (ema_interval + 1);
-            //temp_emas.push(current_price * k + prev_ema * (1 - k));
+            temp_emas.push(current_price * k + prev_ema * (1 - k));
           }
         })
       })
