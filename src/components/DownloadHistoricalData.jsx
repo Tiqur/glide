@@ -43,7 +43,7 @@ const DownloadHistoricalData = (props) => {
   const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
 
-  const emulate_request = (request) => {
+  const send_request = (request) => {
     return new Promise(resolve => {
       const tempTokenData = tokenData;
       
@@ -71,9 +71,48 @@ const DownloadHistoricalData = (props) => {
 
           resolve()
         })
-      // Be kind to api
+      // Be kind to api ( 1200 weight per minute )
+      // Weights:
+      //  5, 10, 20, 50, 100 : 1
+      //  500	               : 5
+      //  1000  	           : 10
+      //  5000 	             : 50
       }, 350);
     })
+  }
+
+  // Calculate emas for historical data
+  const calc_historical_emas = (tokens, timeIntervals, emaIntervals) => {
+    setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Calculating EMAs for historical data...`}])
+    tokens.forEach(token => {
+      timeIntervals.forEach(time_interval => {
+        emaIntervals.forEach(ema_interval => {
+          // Temp values
+          const interval_data = tokenData[token][time_interval];
+          const [temp_ohlvc, temp_emas] = [interval_data['ohlvc'], interval_data['emas']];
+
+          // Extract closing prices from specified interval
+          const closing_prices = temp_ohlvc.map(e => e.close);
+
+          // Calculate SMA for first range, then delete from list to avoid using data from future
+          const data_range = closing_prices.slice(0, ema_interval);
+          const new_sma = data_range.reduce((a, b) => a + b, 0);
+          temp_emas.push(new_sma);
+
+          // List without the first (sma) elements
+          const new_data_range = closing_prices.slice(ema_interval, closing_prices.length);
+          
+          for (let i=0; i < new_data_range.length-1; i++) {
+            // Calculate ema
+            const current_price = new_data_range[i];
+            const prev_ema = temp_emas[temp_emas.length-1];
+            const k = 2 / (ema_interval + 1);
+            temp_emas.push(current_price * k + prev_ema * (1 - k));
+          }
+        })
+      })
+    })
+    setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: 'Done!'}])
   }
 
   // Queue requests for every interval and token in chunks
@@ -120,16 +159,20 @@ const DownloadHistoricalData = (props) => {
       return new Promise(resolve => {
         const request = requests_queue.shift();
         setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Fetching historical data for ${request.token} Time Interval: ${request.time_interval}`}])
-        emulate_request(request, tokenData, setTokenData).then(() => {
+        send_request(request, tokenData, setTokenData).then(() => {
           requests_queue.length > 0 ? fetch_data().then(resolve) : resolve();
         })
       })
     }
-    fetch_data().then(() => {
-      setStatus('running');
-      setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Done!`}])
-    });
 
+    // Finish
+    fetch_data().then(() => {
+      
+      // Calculate historical emas
+      calc_historical_emas(tokens, timeIntervals, emaIntervals);
+
+      setStatus('running');
+    });
 
   }, [])
   return null;
