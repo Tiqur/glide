@@ -51,14 +51,8 @@ const OpenWebsockets = () => {
                 if (time_between < 0) {
                   // Update properties
                   last_ohlvc.close = current_price;
-
-
-
-
-
-
-
-
+                  if (current_price > last_ohlvc.high) last_ohlvc.high = current_price;
+                  if (current_price < last_ohlvc.low) last_ohlvc.low = current_price;
 
                 } else {
                   // Update ema for each ema_interval
