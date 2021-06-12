@@ -49,6 +49,7 @@ const DownloadHistoricalData = (props) => {
       
       // Initialize with empty data
       tempTokenData[request.token] = tokenData[request.token] || {};
+      tempTokenData[request.token]['current_price'] = tempTokenData[request.token]['current_price'] || null;
       tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || {};
       tempTokenData[request.token][request.time_interval]['ohlvc'] = tempTokenData[request.token][request.time_interval]['ohlvc'] || [];
           
