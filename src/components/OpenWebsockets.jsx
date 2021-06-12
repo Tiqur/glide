@@ -48,10 +48,53 @@ const OpenWebsockets = () => {
 
               // If on same candle as last downloaded
               if (time_between < 0) {
-                // Update price
+                // Update properties
                 last_ohlvc.close = current_price;
+
+
+
+
+
+
+
+
+
               } else {
-                console.log("Append")
+                // Update ema for each ema_interval
+                Object.keys(tokenData[token][time_interval]).forEach(ema_interval => {
+                  if (ema_interval != 'ohlvc') {
+                    const temp_emas = tokenData[token][time_interval][ema_interval];
+
+                    // Calculate ema
+                    const prev_ema = temp_emas[temp_emas.length-1];
+                    const k = 2 / (ema_interval + 1);
+                    const current_ema = current_price * k + prev_ema * (1 - k);
+
+                    // Append previous ema
+                    temp_emas.push(current_ema);
+                    temp_emas.shift();
+                  }
+                })
+
+                // Append new ohlvc
+                const interval_ms = last_ohlvc.end_time - last_ohlvc.start_time + 1;
+                const new_ohlvc = {
+                  start_time: last_ohlvc.end_time + interval_ms,
+                  open: current_price,
+                  high: current_price,
+                  low: current_price,
+                  close: current_price,
+                  end_time: last_ohlvc.end_time + interval_ms * 2 - 1
+                }
+                console.log(new_ohlvc)
+                console.log(ohlvc_arr)
+                ohlvc_arr.push(new_ohlvc);
+                console.log(ohlvc_arr)
+
+                // Remove first element so that there is only ever a fixed amount ( avoid memory leaks ) ( temp fix )
+                ohlvc_arr.shift();
+
+
               }
             }
           }
