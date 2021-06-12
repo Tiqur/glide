@@ -1,8 +1,11 @@
 .container {
   width: 100%;
-  hright: 100vw;
   display: flex;
   justify-content: center;
+}
+
+.layoutContainer {
+  width: 90%;
 }
 
 

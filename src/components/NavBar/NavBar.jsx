@@ -59,7 +59,6 @@ const NavBar = () => {
       { status === 'starting' && Object.keys(tokenData).length === 0 &&
         <>
           <OpenWebsockets/>
-          <DownloadHistoricalData/>
         </>
       }
       <div className={styles.logoContainer}>

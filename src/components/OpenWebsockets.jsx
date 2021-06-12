@@ -7,19 +7,21 @@ const OpenWebsockets = () => {
   const [logs, setLogs] = logState;
 
   useEffect(() => {
-    setLogs((oldLogs) => [...oldLogs, {date: new Date(), loading: true, message: 'Opening websocket connections...'}]);
+    setLogs((oldLogs) => [...oldLogs, {date: new Date(), loading: true, message: 'Initializing websocket connections...'}]);
+    // URL connection
+    const ws = new WebSocket('wss://stream.binance.com:9443/ws');
 
-    // Connect to websockets
-    const conn = new WebSocket("wss://stream.binance.us:9443/ws");
-    conn.onopen = function(evt) {
-      conn.send(JSON.stringify({
-        method: 'SUBSCRIBE',
-        params: ['dogeusdt', 'btcusdt', 'adausdt'].map(e => `${e}@ticker`),
-        id: 1
-      }));
+    ws.onopen = () => {
+        ws.send(JSON.stringify({
+          method: 'SUBSCRIBE',
+          params: ['dogeusdt', 'maticusdt'].map(e => e + '@miniTicker'),
+          id: 1
+        }));
     }
-    conn.onmessage = (msg) => {
-      console.log(msg)
+
+    ws.onmessage = (msg) => {
+      const data = JSON.parse(msg.data);
+      console.log(data);
     }
   }, [])
 

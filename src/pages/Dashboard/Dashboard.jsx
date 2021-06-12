@@ -42,7 +42,7 @@ const Dashboard = () => {
       }).filter(e => e != 0);
 
       allPreviousLoading.forEach(e => {
-        temp_logs[e] = {date: temp_logs[e].date, loading: true, message: temp_logs[e].message, loading: false};
+        temp_logs[e] = {date: temp_logs[e].date, message: temp_logs[e].message, loading: false};
       })
       return temp_logs;
     });
