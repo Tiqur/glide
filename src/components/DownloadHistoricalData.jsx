@@ -178,7 +178,7 @@ const DownloadHistoricalData = (props) => {
       
       // Calculate historical emas
       calc_historical_emas(tokens, timeIntervals, emaIntervals);
-
+    
       setStatus('running');
     });
 
