@@ -51,8 +51,7 @@ const DownloadHistoricalData = (props) => {
       // Initialize with empty data
       tempTokenData[request.token] = tokenData[request.token] || {};
       tempTokenData[request.token]['current_price'] = tempTokenData[request.token]['current_price'] || null;
-      tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || {};
-      tempTokenData[request.token][request.time_interval]['ohlvc'] = tempTokenData[request.token][request.time_interval]['ohlvc'] || [];
+      tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || [];
           
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
@@ -62,8 +61,8 @@ const DownloadHistoricalData = (props) => {
           const partial_data = (data.data).map(e => convertToOhlvc(e));
 
           // Append new data to previously downloaded data ( if any )
-          const new_data = [...tempTokenData[request.token][request.time_interval]['ohlvc'], ...partial_data];
-          tempTokenData[request.token][request.time_interval]['ohlvc'] = new_data;
+          const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
+          tempTokenData[request.token][request.time_interval] = new_data;
 
           // Update token data state
           setTokenData(tempTokenData);
@@ -87,21 +86,20 @@ const DownloadHistoricalData = (props) => {
     tokens.forEach(token => {
       timeIntervals.forEach(time_interval => {
         const interval_data = tokenData[token][time_interval];
-        const ohlvc_arr = interval_data['ohlvc'];
       
         // Add emas for each ohlvc
-        ohlvc_arr.forEach(ohlvc => {
+        interval_data.forEach(ohlvc => {
 
           // For each ema interval
           emaIntervals.forEach(ema_interval => {
-            const ohlvc_index = ohlvc_arr.indexOf(ohlvc);
+            const ohlvc_index = interval_data.indexOf(ohlvc);
             ohlvc['emas'][ema_interval] = 0;
 
             // Calculate SMA for last x (ema_interval) closing prices
             if (ohlvc_index === ema_interval-1) {
 
               // Extract closing prices from specified interval
-              const closing_prices = ohlvc_arr.slice(0, ema_interval).map(e => e.close);
+              const closing_prices = interval_data.slice(0, ema_interval).map(e => e.close);
               const new_sma = closing_prices.reduce((a, b) => a + b, 0) / ema_interval;
 
               // Append SMA for current ema interval
@@ -112,7 +110,7 @@ const DownloadHistoricalData = (props) => {
             // Else, caclulate EMA as usual
             else if (ohlvc_index >= ema_interval) {
               const current_price = ohlvc.close;
-              const prev_ema = ohlvc_arr[ohlvc_index-1]['emas'][ema_interval];
+              const prev_ema = interval_data[ohlvc_index-1]['emas'][ema_interval];
               const k = 2 / (ema_interval + 1);
               const new_ema = current_price * k + prev_ema * (1 - k);
 

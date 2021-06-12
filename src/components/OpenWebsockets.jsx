@@ -36,8 +36,8 @@ const OpenWebsockets = () => {
         if (token === current_token) {
           Object.keys(tokenData[token]).forEach(time_interval => {
             // Make sure 'time_interval' isn't 'current_price'
-            if (typeof tokenData[token][time_interval] === 'object' && tokenData[token][time_interval] && tokenData[token][time_interval]['ohlvc'].length > 0) {
-              const ohlvc_arr = tokenData[token][time_interval]['ohlvc'];
+            if (typeof tokenData[token][time_interval] === 'object' && tokenData[token][time_interval] && tokenData[token][time_interval].length > 0) {
+              const ohlvc_arr = tokenData[token][time_interval];
 
               // Make sure fully downloaded
               if (ohlvc_arr.length === config.precision + max_ema_interval) {
@@ -58,18 +58,16 @@ const OpenWebsockets = () => {
                 } else {
                   // Update ema for each ema_interval
                   Object.keys(tokenData[token][time_interval]).forEach(ema_interval => {
-                    if (ema_interval != 'ohlvc') {
-                      const temp_emas = tokenData[token][time_interval][ema_interval];
+                    const temp_emas = tokenData[token][time_interval][ema_interval];
 
-                      // Calculate ema
-                      const prev_ema = temp_emas[temp_emas.length-1];
-                      const k = 2 / (ema_interval + 1);
-                      const current_ema = current_price * k + prev_ema * (1 - k);
+                    // Calculate ema
+                    const prev_ema = temp_emas[temp_emas.length-1];
+                    const k = 2 / (ema_interval + 1);
+                    const current_ema = current_price * k + prev_ema * (1 - k);
 
-                      // Append previous ema
-                      temp_emas.push(current_ema);
-                      temp_emas.shift();
-                    }
+                    // Append previous ema
+                    temp_emas.push(current_ema);
+                    temp_emas.shift();
                   })
 
                   // Append new ohlvc
