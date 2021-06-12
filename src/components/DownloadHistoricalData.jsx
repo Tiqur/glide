@@ -38,8 +38,9 @@ const convertToOhlvc = (data) => {
 }
 
 const DownloadHistoricalData = (props) => {
-  const { statusState, logState, tokenDataState } = useContext(GlobalContext);
+  const { statusState, logState, tokenDataState, configState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [config, setConfig] = configState;
   const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
 
@@ -146,10 +147,10 @@ const DownloadHistoricalData = (props) => {
 
   useEffect(() => {
     // Config variables
-    const tokens = ['DOGEUSDT', 'MATICUSDT', 'BTCUSDT', 'ETHUSDT'];
-    const timeIntervals = ['1m', '3m', '5m'];
-    const emaIntervals = [9, 13, 21, 55];
-    const precision = 1000;
+    const tokens = config.watchlist.map(e => e.toUpperCase() + 'BUSD');
+    const timeIntervals = config.time_intervals;
+    const emaIntervals = config.ema_intervals;
+    const precision = config.precision;
 
     // Hold requests to be fetched later
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), message: `Queuing downloads...`}])

@@ -3,10 +3,13 @@ import { GlobalContext } from '../components/GlobalContext.jsx';
 import { useContext, useEffect } from 'react';
 
 const OpenWebsockets = () => {
-  const { logState, statusState, tokenDataState } = useContext(GlobalContext);
+  const { logState, configState, statusState, tokenDataState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [config, setConfig] = configState;
   const [logs, setLogs] = logState;
   const [tokenData, setTokenData] = tokenDataState;
+  const max_ema_interval = Math.max.apply(Math, config.ema_intervals);
+
 
   useEffect(() => {
     setLogs((oldLogs) => [...oldLogs, {date: new Date(), loading: true, message: 'Initializing websocket connections...'}]);
@@ -16,7 +19,7 @@ const OpenWebsockets = () => {
     ws.onopen = () => {
         ws.send(JSON.stringify({
           method: 'SUBSCRIBE',
-          params: ['dogeusdt', 'maticusdt', 'btcusdt', 'ethusdt'].map(e => e + '@ticker'),
+          params: config.watchlist.map(e => e.toLowerCase() + 'busd@ticker'),
           id: 1
         }));
     }
@@ -36,7 +39,7 @@ const OpenWebsockets = () => {
             const ohlvc_arr = tokenData[token][time_interval]['ohlvc'];
 
             // Make sure fully downloaded
-            if (ohlvc_arr.length === 1000 + 55) {
+            if (ohlvc_arr.length === config.precision + max_ema_interval) {
               const last_ohlvc = ohlvc_arr[ohlvc_arr.length-1];
               
               // Calculate the time between the current time, and the previous candle's end time.
