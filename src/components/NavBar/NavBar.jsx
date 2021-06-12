@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 const NavLink = (props) => {
   return (
-    <Link to={props.to}>
+    <Link style={{textDecoration: 'none'}} to={props.to}>
       <Text margin='1em 1.5em 0.6em 1em' padding='0 0 0.4em 0' underline>{props.text}</Text>
     </Link>
   )
