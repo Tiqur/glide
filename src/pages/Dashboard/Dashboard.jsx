@@ -33,10 +33,25 @@ const Dashboard = () => {
   })
 
   useEffect(() => {
+    // Remove residual loading animation from previous logs
+    setLogs((oldLogs) => {
+      const temp_logs = oldLogs;
+
+      const allPreviousLoading = logs.map(e => {
+        return e.loading && logs.indexOf(e) < logs.length-1 ? logs.indexOf(e) : 0;
+      }).filter(e => e != 0);
+
+      allPreviousLoading.forEach(e => {
+        temp_logs[e] = {date: temp_logs[e].date, loading: true, message: temp_logs[e].message, loading: false};
+      })
+      return temp_logs;
+    });
+
+
     // Loading animation
     const logLoadingInerval = setInterval(() => {
       const lastLog = logs[logs.length-1] || {};
-
+      // Animate
       if (lastLog.loading) {
         if (!lastLog.loadingState) lastLog.loadingState = 0;
         const newLoadingState = lastLog.loadingState < loadingStates.length-1 ? lastLog.loadingState+1 : 0;
