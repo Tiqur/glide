@@ -32,7 +32,6 @@ const convertToOhlvc = (data) => {
     high: parseFloat(data[2]),
     low: parseFloat(data[3]),
     close: parseFloat(data[4]),
-    volume: parseFloat(data[5]),
     end_time: data[6]
   })
 }
