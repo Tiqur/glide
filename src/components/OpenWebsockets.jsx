@@ -35,8 +35,8 @@ const OpenWebsockets = () => {
       Object.keys(tokenData).forEach(token => {
         if (token === current_token) {
           Object.keys(tokenData[token]).forEach(time_interval => {
-            // Make sure 'time_interval' isn't 'current_price'
-            if (typeof tokenData[token][time_interval] === 'object' && tokenData[token][time_interval] && tokenData[token][time_interval].length > 0) {
+
+            if (tokenData[token][time_interval] && tokenData[token][time_interval].length > 0) {
               const ohlvc_arr = tokenData[token][time_interval];
 
               // Make sure fully downloaded
@@ -55,19 +55,34 @@ const OpenWebsockets = () => {
                   if (current_price > last_ohlvc.high) last_ohlvc.high = current_price;
                   if (current_price < last_ohlvc.low) last_ohlvc.low = current_price;
 
-                } else {
                   // Update ema for each ema_interval
-                  Object.keys(tokenData[token][time_interval]).forEach(ema_interval => {
-                    const temp_emas = tokenData[token][time_interval][ema_interval];
+                  Object.keys(last_ohlvc['emas']).forEach(ema_interval => {
 
                     // Calculate ema
-                    const prev_ema = temp_emas[temp_emas.length-1];
+                    const prev_ema = last_ohlvc['emas'][ema_interval];
                     const k = 2 / (ema_interval + 1);
                     const current_ema = current_price * k + prev_ema * (1 - k);
+                    
+                    // Update new emas
+                    last_ohlvc['emas'][ema_interval] = current_ema;
+                  })
 
-                    // Append previous ema
-                    temp_emas.push(current_ema);
-                    temp_emas.shift();
+
+                } else {
+                  // Initialize new emas
+                  const new_emas = {};
+                  const previous_ohlvc = ohlvc_arr[ohlvc_arr.length-2];
+
+                  // Update ema for each ema_interval
+                  Object.keys(previous_ohlvc['emas']).forEach(ema_interval => {
+
+                    // Calculate ema
+                    const prev_ema = previous_ohlvc['emas'][ema_interval];
+                    const k = 2 / (ema_interval + 1);
+                    const current_ema = current_price * k + prev_ema * (1 - k);
+                    
+                    // Update new emas
+                    new_emas[ema_interval] = current_ema;
                   })
 
                   // Append new ohlvc
@@ -80,12 +95,12 @@ const OpenWebsockets = () => {
                     low: current_price,
                     close: current_price,
                     end_time: last_ohlvc.end_time + interval_ms * 2,
-                    emas: {}
+                    emas: new_emas
                   }
-
+                  
+                  // Append new ohlvc
                   ohlvc_arr.push(new_ohlvc);
-
-                  // Remove first element so that there is only ever a fixed amount ( avoid memory leaks ) ( temp fix )
+                  // Remove first element to prevent eventual memory leak
                   ohlvc_arr.shift();
 
 
