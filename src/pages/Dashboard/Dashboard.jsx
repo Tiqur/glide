@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [tokenData, setTokenData] = tokenDataState;
   const [logs, setLogs] = logState;
   const logsContainerRef = useRef(null);
-  const loadingStates = ['.', '..', '...'];
+  const loadingStates = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
   const logElements = logs.map(e => {
     const date = e.date;
@@ -21,11 +21,13 @@ const Dashboard = () => {
     return (
       <Text key={logs.indexOf(e)}>
         <Text inline color='#05AC70'>[<Text inline>{dateMessage} {timeMessage}</Text>]: </Text> 
-        <Text inline color='white'>{msg}</Text>
-
         {e.loadingState > -1 && 
-          <Text inline color='white'>{loadingStates[e.loadingState]}</Text>
+          <Text inline color='#05AC70'>
+            [<Text inline color='white'>{loadingStates[e.loadingState]}</Text>]
+          </Text>
         }
+        <Text inline color='white'> {msg}</Text>
+
       </Text>
     ) 
   })
@@ -38,10 +40,9 @@ const Dashboard = () => {
       if (lastLog.loading) {
         if (!lastLog.loadingState) lastLog.loadingState = 0;
         const newLoadingState = lastLog.loadingState < loadingStates.length-1 ? lastLog.loadingState+1 : 0;
-        console.log(loadingStates[lastLog.loadingState])
         setLogs((oldLogs) => [...oldLogs.slice(0, oldLogs.length-1), {date: lastLog.date, loading: true, message: lastLog.message, loadingState: newLoadingState}]);
       }
-    }, 300)
+    }, 80)
 
     // Auto scroll to bottom
     logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
