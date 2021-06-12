@@ -7,6 +7,7 @@ import { ReactComponent as StartSvg } from '../../assets/power.svg';
 import { GlobalContext } from '../GlobalContext.jsx';
 import LoadingSpin from 'react-loading-spin';
 import DownloadHistoricalData from '../DownloadHistoricalData.jsx';
+import OpenWebsockets from '../OpenWebsockets.jsx';
 import { Link } from 'react-router-dom';
 
 
@@ -56,7 +57,10 @@ const NavBar = () => {
   return (
     <div className={styles.container}>
       { status === 'starting' && Object.keys(tokenData).length === 0 &&
-        <DownloadHistoricalData />
+        <>
+          <OpenWebsockets/>
+          <DownloadHistoricalData/>
+        </>
       }
       <div className={styles.logoContainer}>
         <div className={styles.centerText}>
