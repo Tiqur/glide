@@ -78,18 +78,17 @@ const OpenWebsockets = () => {
 
                 // Append new ohlvc
                 const interval_ms = last_ohlvc.end_time - last_ohlvc.start_time + 1;
+
                 const new_ohlvc = {
-                  start_time: last_ohlvc.end_time + interval_ms,
+                  start_time: last_ohlvc.end_time + interval_ms + 1,
                   open: current_price,
                   high: current_price,
                   low: current_price,
                   close: current_price,
-                  end_time: last_ohlvc.end_time + interval_ms * 2 - 1
+                  end_time: last_ohlvc.end_time + interval_ms * 2
                 }
-                console.log(new_ohlvc)
-                console.log(ohlvc_arr)
+
                 ohlvc_arr.push(new_ohlvc);
-                console.log(ohlvc_arr)
 
                 // Remove first element so that there is only ever a fixed amount ( avoid memory leaks ) ( temp fix )
                 ohlvc_arr.shift();
