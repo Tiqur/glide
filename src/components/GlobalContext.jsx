@@ -9,9 +9,8 @@ const GlobalProvider = (props) => {
   const [status, setStatus] = useState('idle');
   const [config, setConfig] = useState({
       watchlist: [
-        "DOGE",
-        "MATIC",
-        "ETC"
+        "DOGEUSDT",
+        "MATICBUSD"
       ],
       precision: 1000,
       ema_intervals: [9, 13, 21, 55],

@@ -147,7 +147,7 @@ const DownloadHistoricalData = (props) => {
 
   useEffect(() => {
     // Config variables
-    const tokens = config.watchlist.map(e => e.toUpperCase() + 'BUSD');
+    const tokens = config.watchlist.map(e => e.toUpperCase());
     const timeIntervals = config.time_intervals;
     const emaIntervals = config.ema_intervals;
     const precision = config.precision;

@@ -19,7 +19,7 @@ const OpenWebsockets = () => {
     ws.onopen = () => {
         ws.send(JSON.stringify({
           method: 'SUBSCRIBE',
-          params: config.watchlist.map(e => e.toLowerCase() + 'busd@ticker'),
+          params: config.watchlist.map(e => e.toLowerCase() + '@ticker'),
           id: 1
         }));
     }
