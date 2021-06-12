@@ -49,6 +49,7 @@ const OpenWebsockets = () => {
 
                 // If on same candle as last downloaded
                 if (time_between < 0) {
+
                   // Update properties
                   last_ohlvc.close = current_price;
                   if (current_price > last_ohlvc.high) last_ohlvc.high = current_price;
@@ -80,7 +81,8 @@ const OpenWebsockets = () => {
                     high: current_price,
                     low: current_price,
                     close: current_price,
-                    end_time: last_ohlvc.end_time + interval_ms * 2
+                    end_time: last_ohlvc.end_time + interval_ms * 2,
+                    emas: {}
                   }
 
                   ohlvc_arr.push(new_ohlvc);

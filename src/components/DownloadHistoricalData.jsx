@@ -32,7 +32,8 @@ const convertToOhlvc = (data) => {
     high: parseFloat(data[2]),
     low: parseFloat(data[3]),
     close: parseFloat(data[4]),
-    end_time: data[6]
+    end_time: data[6],
+    emas: {}
   })
 }
 
@@ -86,30 +87,39 @@ const DownloadHistoricalData = (props) => {
     tokens.forEach(token => {
       timeIntervals.forEach(time_interval => {
         const interval_data = tokenData[token][time_interval];
-        const temp_ohlvc = interval_data['ohlvc'];
+        const ohlvc_arr = interval_data['ohlvc'];
+      
+        // Add emas for each ohlvc
+        ohlvc_arr.forEach(ohlvc => {
 
-        emaIntervals.forEach(ema_interval => {
-          tokenData[token][time_interval][ema_interval] = tokenData[token][time_interval][ema_interval] || [];
-          const temp_emas = tokenData[token][time_interval][ema_interval];
+          // For each ema interval
+          emaIntervals.forEach(ema_interval => {
+            const ohlvc_index = ohlvc_arr.indexOf(ohlvc);
+            ohlvc['emas'][ema_interval] = 0;
 
-          // Extract closing prices from specified interval
-          const closing_prices = temp_ohlvc.map(e => e.close);
+            // Calculate SMA for last x (ema_interval) closing prices
+            if (ohlvc_index === ema_interval-1) {
 
-          // Calculate SMA for first range, then delete from list to avoid using data from future
-          const data_range = closing_prices.slice(0, ema_interval);
-          const new_sma = data_range.reduce((a, b) => a + b, 0) / ema_interval;
-          temp_emas.push(new_sma);
+              // Extract closing prices from specified interval
+              const closing_prices = ohlvc_arr.slice(0, ema_interval).map(e => e.close);
+              const new_sma = closing_prices.reduce((a, b) => a + b, 0) / ema_interval;
 
-          // List without the first (sma) elements
-          const new_data_range = closing_prices.slice(ema_interval, closing_prices.length);
-          
-          for (let i=0; i < new_data_range.length-1; i++) {
-            // Calculate ema
-            const current_price = new_data_range[i];
-            const prev_ema = temp_emas[temp_emas.length-1];
-            const k = 2 / (ema_interval + 1);
-            temp_emas.push(current_price * k + prev_ema * (1 - k));
-          }
+              // Append SMA for current ema interval
+              ohlvc['emas'][ema_interval] = new_sma;
+
+            } 
+            
+            // Else, caclulate EMA as usual
+            else if (ohlvc_index >= ema_interval) {
+              const current_price = ohlvc.close;
+              const prev_ema = ohlvc_arr[ohlvc_index-1]['emas'][ema_interval];
+              const k = 2 / (ema_interval + 1);
+              const new_ema = current_price * k + prev_ema * (1 - k);
+
+              // Append new EMA for current ema interval
+              ohlvc['emas'][ema_interval] = new_ema;
+            }
+          })
         })
       })
     })
