@@ -72,7 +72,7 @@ const Chart = (props) => {
               }
             }
        ]}
-        symbol={props.symbol + "USDT"}/>
+        symbol={props.symbol}/>
   )
 }
 export default Chart;
