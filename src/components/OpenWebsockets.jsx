@@ -14,13 +14,13 @@ const calc_emas = (ohlvc_emas, previous_ohlvc, current_price, new_emas) => {
 
     // Update new emas
     new_emas[ema_interval] = current_ema;
-    console.log(`Ema Interval ${ema_interval} Current ema: ${current_ema}`)
   })
 }
 
 const OpenWebsockets = () => {
-  const { logState, configState, statusState, tokenDataState } = useContext(GlobalContext);
+  const { logState, configState, alertState, statusState, tokenDataState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
+  const [alerts, setAlerts] = alertState;
   const [config, setConfig] = configState;
   const [logs, setLogs] = logState;
   const [tokenData, setTokenData] = tokenDataState;
@@ -44,6 +44,14 @@ const OpenWebsockets = () => {
       const data = JSON.parse(msg.data);
       if (!data.c || !data.E || !data.s) return;
       const [current_token, current_price, time] = [data.s, Decimal(data.c), data.E];
+
+
+    
+
+
+
+      alerts.push({time: time, token: current_token, interval: 0, ema4: 'ema'})
+
 
       // Update current price in token data state
       if (current_token in tokenData) tokenData[current_token]['current_price'] = current_price;

@@ -13,9 +13,9 @@ const NotificationBell = (props) => {
   const [prices, setPrices] = priceState;
   const [alerts, setAlerts] = alertState;
 
-  const removeElement = () => {
+  const removeElement = (index) => {
     setAlerts(alerts.filter((o) => {
-      return o.time !== props.time;
+      return alerts.indexOf(o) !== index;
     }))
   }
 
@@ -24,7 +24,7 @@ const NotificationBell = (props) => {
       <div className={styles.notificationMessageContainer}>
         <Link to={{pathname: '/trade', search: '?token='+props.token}}>
       <div onClick={() => {
-        removeElement()
+        removeElement(props.index)
         setAlertPopout(false)
       }} className={styles.notificationMessageContent}>
             <Text>Token: {props.token}</Text>
@@ -33,7 +33,7 @@ const NotificationBell = (props) => {
           </div>
         </Link>
       <div onClick={() => {
-        removeElement()
+        removeElement(props.index)
       }} className={styles.notificationCloseButton}/>
       </div>
     )
@@ -45,7 +45,7 @@ const NotificationBell = (props) => {
         <Portal node={document && document.getElementById('root')}>
           <div onClick={() => {setAlertPopout(false)}} className={styles.notificationPopoutOverlay}/>
           <div className={styles.notificationPopout}>
-            {alerts.map(e => <Notification time={e.time} token={e.token} interval={e.interval} ema4={e.ema4}/> )}
+            {alerts.map(e => <Notification index={alerts.indexOf(e)} time={e.time} token={e.token} interval={e.interval} ema4={e.ema4}/> )}
           </div>
         </Portal>
       }

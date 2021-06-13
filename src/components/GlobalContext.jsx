@@ -3,17 +3,18 @@ const GlobalContext = createContext();
 
 const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState([{token: 'doge', interval: '5m', ema4: 'yes'}, {token: 'doge', interval: '5m', ema4: 'yes'}]);
   const [logs, setLogs] = useState([{date: new Date, message: 'Welcome to Glide! :)'}]);
   const [tokenData, setTokenData] = useState({});
   const [status, setStatus] = useState('idle');
   const [config, setConfig] = useState({
       watchlist: [
         "DOGEUSDT",
+        "MATICBUSD"
       ],
       precision: 1000,
-      ema_intervals: [9],
-      time_intervals: ['1m']
+      ema_intervals: [9, 13, 21, 55],
+      time_intervals: ['1m', '5m', '15m']
 });
 
   return (
