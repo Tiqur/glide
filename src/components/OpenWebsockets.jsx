@@ -46,10 +46,6 @@ const OpenWebsockets = () => {
       const [current_token, current_price, time] = [data.s, Decimal(data.c), data.E];
 
 
-    
-
-
-
       setAlerts((oldAlerts) => [...oldAlerts, {time: time, token: current_token, interval: 0, ema: 'yes'}]);
 
 
