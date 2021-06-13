@@ -50,7 +50,7 @@ const OpenWebsockets = () => {
 
 
 
-      alerts.push({time: time, token: current_token, interval: 0, ema4: 'ema'})
+      setAlerts((oldAlerts) => [...oldAlerts, {time: time, token: current_token, interval: 0, ema: 'yes'}]);
 
 
       // Update current price in token data state

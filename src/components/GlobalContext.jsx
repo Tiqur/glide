@@ -3,7 +3,7 @@ const GlobalContext = createContext();
 
 const GlobalProvider = (props) => {
   const [prices, setPrices] = useState({});
-  const [alerts, setAlerts] = useState([{token: 'doge', interval: '5m', ema4: 'yes'}, {token: 'doge', interval: '5m', ema4: 'yes'}]);
+  const [alerts, setAlerts] = useState([]);
   const [logs, setLogs] = useState([{date: new Date, message: 'Welcome to Glide! :)'}]);
   const [tokenData, setTokenData] = useState({});
   const [status, setStatus] = useState('idle');
