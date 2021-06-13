@@ -1,6 +1,7 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { GlobalContext } from '../components/GlobalContext.jsx';
 import { useContext, useEffect } from 'react';
+import Decimal from 'decimal.js';
 
 const OpenWebsockets = () => {
   const { logState, configState, statusState, tokenDataState } = useContext(GlobalContext);
@@ -26,7 +27,8 @@ const OpenWebsockets = () => {
 
     ws.onmessage = (msg) => {
       const data = JSON.parse(msg.data);
-      const [current_token, current_price, time] = [data.s, parseFloat(data.c), data.E];
+      if (!data.c || !data.E || !data.s) return;
+      const [current_token, current_price, time] = [data.s, Decimal(data.c), data.E];
 
       // Update current price in token data state
       if (current_token in tokenData) tokenData[current_token]['current_price'] = current_price;
@@ -60,9 +62,9 @@ const OpenWebsockets = () => {
 
                     // Calculate ema
                     const prev_ema = last_ohlvc['emas'][ema_interval];
-                    const k = 2 / (ema_interval + 1);
-                    const current_ema = current_price * k + prev_ema * (1 - k);
-                    
+                    const k = Decimal(2).div(Decimal(ema_interval).plus(1));
+                    const current_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
+
                     // Update new emas
                     last_ohlvc['emas'][ema_interval] = current_ema;
                   })
@@ -75,11 +77,11 @@ const OpenWebsockets = () => {
 
                   // Update ema for each ema_interval
                   Object.keys(previous_ohlvc['emas']).forEach(ema_interval => {
-
                     // Calculate ema
                     const prev_ema = previous_ohlvc['emas'][ema_interval];
-                    const k = 2 / (ema_interval + 1);
-                    const current_ema = current_price * k + prev_ema * (1 - k);
+                    const k = Decimal(2).div(Decimal(ema_interval).plus(1));
+                    const current_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
+
                     
                     // Update new emas
                     new_emas[ema_interval] = current_ema;
@@ -90,10 +92,10 @@ const OpenWebsockets = () => {
 
                   const new_ohlvc = {
                     start_time: last_ohlvc.end_time + interval_ms + 1,
-                    open: current_price,
-                    high: current_price,
-                    low: current_price,
-                    close: current_price,
+                    open: Decimal(current_price),
+                    high: Decimal(current_price),
+                    low: Decimal(current_price),
+                    close: Decimal(current_price),
                     end_time: last_ohlvc.end_time + interval_ms * 2,
                     emas: new_emas
                   }

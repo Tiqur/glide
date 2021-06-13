@@ -10,11 +10,10 @@ const GlobalProvider = (props) => {
   const [config, setConfig] = useState({
       watchlist: [
         "DOGEUSDT",
-        "MATICBUSD"
       ],
       precision: 1000,
-      ema_intervals: [9, 13, 21, 55],
-      time_intervals: ['1m', '5m', '15m']
+      ema_intervals: [9],
+      time_intervals: ['1m']
 });
 
   return (

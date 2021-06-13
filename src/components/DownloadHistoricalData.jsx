@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { GlobalContext } from '../components/GlobalContext.jsx';
 import { useContext, useEffect } from 'react';
+import Decimal from 'decimal.js';
+const PRECISION = 28;
 
 // Time Constants
 const MINUTE = 60 * 1000 // In ms
@@ -28,10 +30,10 @@ const time_interval_to_ms  = {
 const convertToOhlvc = (data) => {
   return ({
     start_time: data[0],
-    open: parseFloat(data[1]),
-    high: parseFloat(data[2]),
-    low: parseFloat(data[3]),
-    close: parseFloat(data[4]),
+    open: Decimal(data[1]),
+    high: Decimal(data[2]),
+    low: Decimal(data[3]),
+    close: Decimal(data[4]),
     end_time: data[6],
     emas: {}
   })
@@ -100,7 +102,7 @@ const DownloadHistoricalData = (props) => {
 
               // Extract closing prices from specified interval
               const closing_prices = interval_data.slice(0, ema_interval).map(e => e.close);
-              const new_sma = closing_prices.reduce((a, b) => a + b, 0) / ema_interval;
+              const new_sma = closing_prices.reduce((a, b) => Decimal(a).plus(Decimal(b)), 0).div(Decimal(ema_interval));
 
               // Append SMA for current ema interval
               ohlvc['emas'][ema_interval] = new_sma;
@@ -111,8 +113,8 @@ const DownloadHistoricalData = (props) => {
             else if (ohlvc_index >= ema_interval) {
               const current_price = ohlvc.close;
               const prev_ema = interval_data[ohlvc_index-1]['emas'][ema_interval];
-              const k = 2 / (ema_interval + 1);
-              const new_ema = current_price * k + prev_ema * (1 - k);
+              const k = Decimal(2).div(Decimal(ema_interval).plus(1));
+              const new_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
 
               // Append new EMA for current ema interval
               ohlvc['emas'][ema_interval] = new_ema;
