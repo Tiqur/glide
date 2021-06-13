@@ -3,6 +3,21 @@ import { GlobalContext } from '../components/GlobalContext.jsx';
 import { useContext, useEffect } from 'react';
 import Decimal from 'decimal.js';
 
+
+const calc_emas = (ohlvc_emas, previous_ohlvc, current_price, new_emas) => {
+  // Update ema for each ema_interval
+  Object.keys(ohlvc_emas).forEach(ema_interval => {
+    // Calculate ema
+    const prev_ema = previous_ohlvc['emas'][ema_interval];
+    const k = Decimal(2).div(Decimal(ema_interval).plus(1));
+    const current_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
+
+    // Update new emas
+    new_emas[ema_interval] = current_ema;
+    console.log(`Ema Interval ${ema_interval} Current ema: ${current_ema}`)
+  })
+}
+
 const OpenWebsockets = () => {
   const { logState, configState, statusState, tokenDataState } = useContext(GlobalContext);
   const [status, setStatus] = statusState;
@@ -58,17 +73,7 @@ const OpenWebsockets = () => {
                   if (current_price < last_ohlvc.low) last_ohlvc.low = current_price;
 
                   // Update ema for each ema_interval
-                  Object.keys(last_ohlvc['emas']).forEach(ema_interval => {
-
-                    // Calculate ema
-                    const prev_ema = last_ohlvc['emas'][ema_interval];
-                    const k = Decimal(2).div(Decimal(ema_interval).plus(1));
-                    const current_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
-
-                    // Update new emas
-                    last_ohlvc['emas'][ema_interval] = current_ema;
-                  })
-
+                  calc_emas(last_ohlvc['emas'], last_ohlvc, current_price, last_ohlvc)
 
                 } else {
                   // Initialize new emas
@@ -76,16 +81,7 @@ const OpenWebsockets = () => {
                   const previous_ohlvc = ohlvc_arr[ohlvc_arr.length-2];
 
                   // Update ema for each ema_interval
-                  Object.keys(previous_ohlvc['emas']).forEach(ema_interval => {
-                    // Calculate ema
-                    const prev_ema = previous_ohlvc['emas'][ema_interval];
-                    const k = Decimal(2).div(Decimal(ema_interval).plus(1));
-                    const current_ema = current_price.times(k).plus(prev_ema.times(Decimal(1).minus(k)));
-
-                    
-                    // Update new emas
-                    new_emas[ema_interval] = current_ema;
-                  })
+                  calc_emas(previous_ohlvc['emas'], previous_ohlvc, current_price, new_emas)
 
                   // Append new ohlvc
                   const interval_ms = last_ohlvc.end_time - last_ohlvc.start_time + 1;
