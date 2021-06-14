@@ -82,8 +82,8 @@ const OpenWebsockets = () => {
         if (token === current_token) {
           Object.keys(tokenData[token]).forEach(time_interval => {
 
-            if (tokenData[token][time_interval] && tokenData[token][time_interval].length > 0) {
-              const ohlvc_arr = tokenData[token][time_interval];
+            if (tokenData[token][time_interval] && tokenData[token][time_interval]['ohlvc'] && tokenData[token][time_interval]['ohlvc'].length > 0) {
+              const ohlvc_arr = tokenData[token][time_interval]['ohlvc'];
 
               // Make sure fully downloaded
               if (ohlvc_arr.length === config.precision + max_ema_interval) {

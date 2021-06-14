@@ -53,7 +53,9 @@ const DownloadHistoricalData = (props) => {
       // Initialize with empty data
       tempTokenData[request.token] = tokenData[request.token] || {};
       tempTokenData[request.token]['current_price'] = tempTokenData[request.token]['current_price'] || null;
-      tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || [];
+      tempTokenData[request.token][request.time_interval] = tempTokenData[request.token][request.time_interval] || {};
+      tempTokenData[request.token][request.time_interval]['lock'] = tempTokenData[request.token][request.time_interval]['lock'] || null;
+      tempTokenData[request.token][request.time_interval]['ohlvc'] = tempTokenData[request.token][request.time_interval]['ohlvc'] || [];
           
       setTimeout(() => {
         const url = `https://api.binance.com/api/v3/klines?symbol=${request.token}&interval=${request.time_interval}&startTime=${Date.now() - request.interval_ms}&limit=1000`;
@@ -63,8 +65,8 @@ const DownloadHistoricalData = (props) => {
           const partial_data = (data.data).map(e => convertToOhlvc(e));
 
           // Append new data to previously downloaded data ( if any )
-          const new_data = [...tempTokenData[request.token][request.time_interval], ...partial_data];
-          tempTokenData[request.token][request.time_interval] = new_data;
+          const new_data = [...tempTokenData[request.token][request.time_interval]['ohlvc'], ...partial_data];
+          tempTokenData[request.token][request.time_interval]['ohlvc'] = new_data;
 
           // Update token data state
           setTokenData(tempTokenData);
@@ -87,7 +89,7 @@ const DownloadHistoricalData = (props) => {
 
     tokens.forEach(token => {
       timeIntervals.forEach(time_interval => {
-        const interval_data = tokenData[token][time_interval];
+        const interval_data = tokenData[token][time_interval]['ohlvc'];
       
         // Add emas for each ohlvc
         interval_data.forEach(ohlvc => {
