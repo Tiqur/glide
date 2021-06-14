@@ -3,8 +3,32 @@ import { GlobalContext } from '../components/GlobalContext.jsx';
 import { useContext, useEffect } from 'react';
 import Decimal from 'decimal.js';
 
+const alerts = (ohlvc_arr, token, config, setAlerts, time_interval) => {
 
-const calc_emas = (ohlvc_emas, previous_ohlvc, current_price, new_emas) => {
+  // If all emas are calculated
+  if (Object.keys(ohlvc_arr).length === config.ema_intervals.length) {
+    const sorted_emas = Object.values(ohlvc_arr).sort((a, b) => {
+      return a.lessThan(b) ? -1 : a.greaterThan(b) ? 1 : 0;
+    });
+
+    const ema_arr = Object.values(ohlvc_arr).reverse().toString();
+    const sorted_ema_arr = Object.values(sorted_emas).toString();
+    const crossed = ema_arr === sorted_ema_arr;
+
+    // If crossed
+    if (crossed) {
+      setAlerts((oldAlerts) => [...oldAlerts, {time: Date.now(), token: token, interval: time_interval, ema: Object.values(ohlvc_arr).map(e => e.toString())}]);
+    }
+
+
+
+    //console.log(token, time_interval, emas.map(e => e.toPrecision(9)), sorted_emas.map(e => e.toPrecision(9)), emas === sorted_emas)
+  }
+}
+
+
+const calc_emas = (ohlvc_emas, previous_ohlvc, current_price, new_emas, token, config, setAlerts, time_interval) => {
+  const em = {};
   // Update ema for each ema_interval
   Object.keys(ohlvc_emas).forEach(ema_interval => {
     // Calculate ema
@@ -14,7 +38,11 @@ const calc_emas = (ohlvc_emas, previous_ohlvc, current_price, new_emas) => {
 
     // Update new emas
     new_emas[ema_interval] = current_ema;
+    em[ema_interval] = current_ema;
   })
+
+  // Alert
+  alerts(em, token, config, setAlerts, time_interval)
 }
 
 const OpenWebsockets = () => {
@@ -46,9 +74,6 @@ const OpenWebsockets = () => {
       const [current_token, current_price, time] = [data.s, Decimal(data.c), data.E];
 
 
-      setAlerts((oldAlerts) => [...oldAlerts, {time: time, token: current_token, interval: 0, ema: 'yes'}]);
-
-
       // Update current price in token data state
       if (current_token in tokenData) tokenData[current_token]['current_price'] = current_price;
 
@@ -77,7 +102,7 @@ const OpenWebsockets = () => {
                   if (current_price < last_ohlvc.low) last_ohlvc.low = current_price;
 
                   // Update ema for each ema_interval
-                  calc_emas(last_ohlvc['emas'], last_ohlvc, current_price, last_ohlvc)
+                  calc_emas(last_ohlvc['emas'], last_ohlvc, current_price, last_ohlvc, token, config, setAlerts, time_interval);
 
                 } else {
                   // Initialize new emas
@@ -85,7 +110,7 @@ const OpenWebsockets = () => {
                   const previous_ohlvc = ohlvc_arr[ohlvc_arr.length-2];
 
                   // Update ema for each ema_interval
-                  calc_emas(previous_ohlvc['emas'], previous_ohlvc, current_price, new_emas)
+                  calc_emas(previous_ohlvc['emas'], previous_ohlvc, current_price, new_emas, token, config, setAlerts, time_interval);
 
                   // Append new ohlvc
                   const interval_ms = last_ohlvc.end_time - last_ohlvc.start_time + 1;
@@ -107,6 +132,7 @@ const OpenWebsockets = () => {
 
 
                 }
+
               }
             }
           })

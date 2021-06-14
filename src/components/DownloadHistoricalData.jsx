@@ -106,7 +106,6 @@ const DownloadHistoricalData = (props) => {
 
               // Append SMA for current ema interval
               ohlvc['emas'][ema_interval] = new_sma;
-
             } 
             
             // Else, caclulate EMA as usual

@@ -9,12 +9,11 @@ const GlobalProvider = (props) => {
   const [status, setStatus] = useState('idle');
   const [config, setConfig] = useState({
       watchlist: [
-        "DOGEUSDT",
-        "MATICBUSD"
+        'BTCUSDT'
       ],
       precision: 1000,
       ema_intervals: [9, 13, 21, 55],
-      time_intervals: ['1m', '5m', '15m']
+      time_intervals: ['1m']
 });
 
   return (

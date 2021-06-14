@@ -53,7 +53,7 @@ const NotificationBell = (props) => {
         <BellSvg className={styles.bell}/>
         { alerts.length > 0 &&
           <div className={styles.badge}>
-            <Text size={1.4}>{alerts.length}</Text>
+            <Text color='white' size={1.4}>{alerts.length}</Text>
           </div>
         }
       </div>
