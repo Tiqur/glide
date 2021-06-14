@@ -12,6 +12,7 @@ const GlobalProvider = (props) => {
         'BTCUSDT'
       ],
       precision: 1000,
+      alert_buffer: 5000,
       ema_intervals: [9, 13, 21, 55],
       time_intervals: ['1m']
 });

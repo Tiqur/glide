@@ -17,8 +17,7 @@ const alerts = (ohlvc_arr, token, config, setAlerts, time_interval, current_lock
 
     // If crossed and x ms have elapsed since last time emas weren't crossed
     const lock_diff = Date.now() - current_lock;
-    console.log(current_lock, lock_diff, crossed)
-    if (crossed && lock_diff >= 5000) {
+    if (crossed && lock_diff >= config.alert_buffer) {
       setAlerts((oldAlerts) => [...oldAlerts, {time: Date.now(), token: token, interval: time_interval, ema: Object.values(ohlvc_arr).map(e => e.toString())}]);
     } 
     else if (crossed) {
